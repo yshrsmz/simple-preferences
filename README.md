@@ -52,3 +52,5 @@ public class SettingsPrefs extends Settings {
     }
 }
 ```
+
+Generated classes will be placed at the same package as parent abstract classes.
