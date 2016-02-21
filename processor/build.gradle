@@ -1,0 +1,17 @@
+apply plugin: 'java'
+apply plugin: 'com.github.ben-manes.versions'
+
+targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+dependencies {
+
+  compile project(':annotations')
+  compile deps.autoservice
+  compile deps.autocommon
+  compile deps.javapoet
+
+  testCompile deps.junit
+  testCompile deps.truth
+  testCompile deps.compiletesting
+}
