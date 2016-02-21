@@ -11,9 +11,19 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.CLASS)
 public @interface Key {
-  String name();
+  /**
+   * name for the preference field.
+   * if empty, use lower-cased variable name as its preference field name
+   *
+   * @return preference field name
+   */
+  String name() default "";
 
-  String setter() default "";
-
-  String getter() default "";
+  /**
+   * whether or not put get/is prefix as setter method's prefix.
+   * in some case, you would prefer to use variable name as a getter name.
+   *
+   * @return true if you use variable name as a name for its setter method
+   */
+  boolean omitGetterPrefix() default false;
 }

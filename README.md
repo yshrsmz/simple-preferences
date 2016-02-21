@@ -7,7 +7,7 @@ Android Library to simplify SharedPreferences use.
 define abstract class
 
 ```
-@Preferences(name="settings")
+@Preferences("settings")
 public abstract Settings {
     @Key String userName;
     @Key boolean admin;
