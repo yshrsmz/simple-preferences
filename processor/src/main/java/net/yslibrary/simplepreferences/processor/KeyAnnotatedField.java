@@ -51,6 +51,7 @@ public class KeyAnnotatedField {
     List<MethodSpec> methods = new ArrayList<>();
 
     methods.add(type.generateGetter(prefsField, name, preferenceKey, omitGetterPrefix));
+    methods.add(type.generateSetter(prefsField, name, preferenceKey));
 
     return methods;
   }
@@ -63,6 +64,12 @@ public class KeyAnnotatedField {
         return getGetterBuilder(name, omitPrefix).addStatement("return $N.getBoolean($S, $L)",
             prefs, key, name).build();
       }
+
+      @Override
+      public MethodSpec generateSetter(FieldSpec prefs, String name, String key) {
+        return getSetterBuilder(name, boolean.class).addStatement(
+            "$N.edit().putBoolean($S, value).apply()", prefs, key).build();
+      }
     },
     STRING(TypeName.get(String.class), GETTER_PREFIX) {
       @Override
@@ -70,6 +77,12 @@ public class KeyAnnotatedField {
           boolean omitPrefix) {
         return getGetterBuilder(name, omitPrefix).addStatement("return $N.getString($S, $L)", prefs,
             key, name).build();
+      }
+
+      @Override
+      public MethodSpec generateSetter(FieldSpec prefs, String name, String key) {
+        return getSetterBuilder(name, String.class).addStatement(
+            "$N.edit().putString($S, value).apply()", prefs, key).build();
       }
     },
     INT(TypeName.INT, GETTER_PREFIX) {
@@ -79,6 +92,12 @@ public class KeyAnnotatedField {
         return getGetterBuilder(name, omitPrefix).addStatement("return $N.getInt($S, $L)", prefs,
             key, name).build();
       }
+
+      @Override
+      public MethodSpec generateSetter(FieldSpec prefs, String name, String key) {
+        return getSetterBuilder(name, int.class).addStatement("$N.edit().putInt($S, value).apply()",
+            prefs, key).build();
+      }
     },
     FLOAT(TypeName.FLOAT, GETTER_PREFIX) {
       @Override
@@ -86,6 +105,12 @@ public class KeyAnnotatedField {
           boolean omitPrefix) {
         return getGetterBuilder(name, omitPrefix).addStatement("return $N.getFloat($S, $L)", prefs,
             key, name).build();
+      }
+
+      @Override
+      public MethodSpec generateSetter(FieldSpec prefs, String name, String key) {
+        return getSetterBuilder(name, float.class).addStatement(
+            "$N.edit().putFloat($S, value).apply()", prefs, key).build();
       }
     },
     LONG(TypeName.LONG, GETTER_PREFIX) {
@@ -95,6 +120,12 @@ public class KeyAnnotatedField {
         return getGetterBuilder(name, omitPrefix).addStatement("return $N.getLong($S, $L)", prefs,
             key, name).build();
       }
+
+      @Override
+      public MethodSpec generateSetter(FieldSpec prefs, String name, String key) {
+        return getSetterBuilder(name, long.class).addStatement(
+            "$N.edit().putLong($S, value).apply()", prefs, key).build();
+      }
     },
     STRING_SET(ParameterizedTypeName.get(Set.class, String.class), GETTER_PREFIX) {
       @Override
@@ -102,6 +133,16 @@ public class KeyAnnotatedField {
           boolean omitPrefix) {
         return getGetterBuilder(name, omitPrefix).addStatement("return $N.getStringSet($S, $L)",
             prefs, key, name).build();
+      }
+
+      @Override
+      public MethodSpec generateSetter(FieldSpec prefs, String name, String key) {
+        MethodSpec.Builder builder =
+            MethodSpec.methodBuilder(SETTER_PREFIX + Utils.lowerToUpperCamel(name))
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ParameterizedTypeName.get(Set.class, String.class), "value");
+        return builder.addStatement("$N.edit().putStringSet($S, value).apply()", prefs, key)
+            .build();
       }
     };
 
@@ -136,9 +177,17 @@ public class KeyAnnotatedField {
     public abstract MethodSpec generateGetter(FieldSpec prefs, String name, String key,
         boolean omitPrefix);
 
+    public abstract MethodSpec generateSetter(FieldSpec prefs, String name, String key);
+
     protected MethodSpec.Builder getGetterBuilder(String name, boolean omitPrefix) {
       String methodName = omitPrefix ? name : getterPrefix + Utils.lowerToUpperCamel(name);
       return MethodSpec.methodBuilder(methodName).addModifiers(Modifier.PUBLIC).returns(type);
+    }
+
+    protected MethodSpec.Builder getSetterBuilder(String name, Class<?> valueClass) {
+      return MethodSpec.methodBuilder(SETTER_PREFIX + Utils.lowerToUpperCamel(name))
+          .addModifiers(Modifier.PUBLIC)
+          .addParameter(valueClass, "value");
     }
   }
 }
