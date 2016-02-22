@@ -10,6 +10,7 @@ dependencies {
   compile deps.autoservice
   compile deps.autocommon
   compile deps.javapoet
+  compile deps.android
 
   testCompile deps.junit
   testCompile deps.truth

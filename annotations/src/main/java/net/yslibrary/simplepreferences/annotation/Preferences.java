@@ -13,6 +13,8 @@ import java.lang.annotation.Target;
 public @interface Preferences {
 
   /**
+   * preferences schema name.
+   * if empty, default SharedPreferences is picked.
    *
    * @return
    */

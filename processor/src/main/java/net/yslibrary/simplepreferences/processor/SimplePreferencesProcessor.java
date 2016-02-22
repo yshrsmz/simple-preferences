@@ -1,6 +1,9 @@
 package net.yslibrary.simplepreferences.processor;
 
 import com.google.auto.service.AutoService;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -12,11 +15,13 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import net.yslibrary.simplepreferences.annotation.Preferences;
+import net.yslibrary.simplepreferences.processor.exception.ProcessingException;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({
@@ -29,6 +34,8 @@ public class SimplePreferencesProcessor extends AbstractProcessor {
   private Types typeUtils;
   private Filer filer;
   private Messager messager;
+
+  private Map<String, PreferenceAnnotatedClass> items = new LinkedHashMap<>();
 
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -46,19 +53,68 @@ public class SimplePreferencesProcessor extends AbstractProcessor {
       return true;
     }
 
+    // prepare
     roundEnv.getElementsAnnotatedWith(Preferences.class).forEach(element -> {
       if (!element.getKind().isClass()) {
         error(element, "Only classes can be annotated with @%s", Preferences.class.getSimpleName());
         return;
       }
 
+      try {
+        TypeElement typeElement = (TypeElement) element;
 
+        PreferenceAnnotatedClass model = new PreferenceAnnotatedClass(typeElement, elementUtils);
+
+        checkValid(model);
+
+        PreferenceAnnotatedClass existing = items.get(model.preferenceName);
+
+        if (existing != null) {
+          throw new ProcessingException(typeElement,
+              "Conflict: Class %s is annotated with @%s with value='%s', but %s already uses same value",
+              model.annotatedElement, Preferences.class.getSimpleName(), model.preferenceName,
+              existing.annotatedElement.getQualifiedName().toString());
+        }
+
+        items.put(model.preferenceName, model);
+      } catch (ProcessingException e) {
+        error(e.element, e.getMessage());
+      }
     });
+
+    // generate
+    items.forEach((key, preferenceAnnotatedClass) -> {
+      try {
+        preferenceAnnotatedClass.generate(elementUtils, filer);
+      } catch (IOException e) {
+        error(null, e.getMessage());
+      }
+    });
+
+    items.clear();
 
     return true;
   }
 
   private void error(Element e, String msg, Object... args) {
-    messager.printMessage(Diagnostic.Kind.ERROR, String.format(msg, args), e);
+    error(e, String.format(msg, args));
+  }
+
+  private void error(Element e, String msg) {
+    messager.printMessage(Diagnostic.Kind.ERROR, msg, e);
+  }
+
+  private void checkValid(PreferenceAnnotatedClass item) throws ProcessingException {
+    TypeElement element = item.annotatedElement;
+
+    if (!element.getModifiers().contains(Modifier.PUBLIC)) {
+      throw new ProcessingException(element, "The class %s is not public",
+          element.getQualifiedName().toString());
+    }
+
+    if (element.getModifiers().contains(Modifier.FINAL)) {
+      throw new ProcessingException(element, "The class %s is define as final",
+          element.getQualifiedName().toString());
+    }
   }
 }
