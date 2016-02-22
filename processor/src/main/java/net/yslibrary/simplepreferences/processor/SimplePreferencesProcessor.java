@@ -25,7 +25,7 @@ import net.yslibrary.simplepreferences.processor.exception.ProcessingException;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({
-    "ney.yslibrary.simplepreferences.annotation.*"
+    "net.yslibrary.simplepreferences.annotation.*"
 })
 @AutoService(Processor.class)
 public class SimplePreferencesProcessor extends AbstractProcessor {
@@ -49,6 +49,7 @@ public class SimplePreferencesProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    messager.printMessage(Diagnostic.Kind.NOTE, "start processor");
     if (annotations.isEmpty()) {
       return true;
     }
@@ -79,12 +80,15 @@ public class SimplePreferencesProcessor extends AbstractProcessor {
         items.put(model.preferenceName, model);
       } catch (ProcessingException e) {
         error(e.element, e.getMessage());
+      } catch (IllegalStateException e) {
+        error(null, e.getMessage());
       }
     });
 
     // generate
     items.forEach((key, preferenceAnnotatedClass) -> {
       try {
+        System.out.println("write item: " + preferenceAnnotatedClass.preferenceClassName);
         preferenceAnnotatedClass.generate(elementUtils, filer);
       } catch (IOException e) {
         error(null, e.getMessage());

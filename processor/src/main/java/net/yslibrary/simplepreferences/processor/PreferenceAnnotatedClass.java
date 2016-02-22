@@ -2,8 +2,11 @@ package net.yslibrary.simplepreferences.processor;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import com.google.common.base.Strings;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
@@ -19,6 +22,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
 import net.yslibrary.simplepreferences.annotation.Key;
 import net.yslibrary.simplepreferences.annotation.Preferences;
+import net.yslibrary.simplepreferences.processor.exception.ProcessingException;
 
 /**
  * Created by yshrsmz on 2016/02/21.
@@ -42,7 +46,7 @@ public class PreferenceAnnotatedClass {
   public final List<KeyAnnotatedField> keys = new ArrayList<>();
 
   public PreferenceAnnotatedClass(TypeElement element, Elements elementUtils)
-      throws IllegalStateException {
+      throws IllegalStateException, ProcessingException {
     annotatedElement = element;
     Preferences annotation = annotatedElement.getAnnotation(Preferences.class);
     String value = annotation.value().trim();
@@ -61,21 +65,33 @@ public class PreferenceAnnotatedClass {
     PackageElement pkg = elementUtils.getPackageOf(element);
     packageName = pkg.isUnnamed() ? null : pkg.getQualifiedName().toString();
 
-    List<KeyAnnotatedField> annotatedVariables = element.getEnclosedElements()
-        .stream()
-        .filter(variable -> variable.getAnnotation(Key.class) != null)
-        .map(variable -> new KeyAnnotatedField((VariableElement) variable))
-        .collect(Collectors.toList());
+    try {
+      List<KeyAnnotatedField> annotatedVariables = element.getEnclosedElements()
+          .stream()
+          .filter(variable -> variable.getAnnotation(Key.class) != null)
+          .map(variable -> {
+            try {
+              return new KeyAnnotatedField((VariableElement) variable);
+            } catch (ProcessingException e) {
+              throw new RuntimeException(e);
+            }
+          })
+          .collect(Collectors.toList());
 
-    keys.addAll(annotatedVariables);
+      keys.addAll(annotatedVariables);
+    } catch (RuntimeException e) {
+      if (e.getCause() instanceof ProcessingException) {
+        throw (ProcessingException) e.getCause();
+      }
+    }
   }
 
   public void generate(Elements elementUtils, Filer filer) throws IOException {
-    TypeSpec.Builder classBuilder =
-        TypeSpec.classBuilder(preferenceClassName).addModifiers(Modifier.PUBLIC);
+    TypeSpec.Builder classBuilder = TypeSpec.classBuilder(preferenceClassName)
+        .addModifiers(Modifier.PUBLIC)
+        .superclass(ClassName.get(annotatedElement));
 
-    TypeElement generatingClass = elementUtils.getTypeElement(qualifiedPreferenceClassName);
-    PackageElement pkg = elementUtils.getPackageOf(generatingClass);
+    TypeName generatingClass = ClassName.get(packageName, preferenceClassName);
 
     // SharedPreferences field ---
     FieldSpec prefsField =
@@ -91,32 +107,43 @@ public class PreferenceAnnotatedClass {
         .addStatement("throw new NullPointerException($S)", "Context is Null!")
         .endControlFlow();
     if (preferenceName.equals(DEFAULT_PREFS)) {
-      constructorBuilder.addStatement(
-          "prefs = PreferenceManager.getDefaultSharedPreferences(context)");
+      constructorBuilder.addStatement("prefs = $T.getDefaultSharedPreferences(context)",
+          PreferenceManager.class);
     } else {
       constructorBuilder.addStatement(
           "prefs = context.getSharedPreferences($S, Context.MODE_PRIVATE)", preferenceName);
     }
     MethodSpec constructor = constructorBuilder.build();
+    classBuilder.addMethod(constructor);
 
     // create method ---
     MethodSpec.Builder createMethod = MethodSpec.methodBuilder("create")
         .addModifiers(Modifier.PUBLIC)
         .addParameter(Context.class, "context")
-        .returns(TypeName.get(generatingClass.asType()));
+        .returns(generatingClass);
 
     createMethod.beginControlFlow("if (context == null)")
         .addStatement("throw new NullPointerException($S)", "Context is Null!")
         .endControlFlow();
 
-    createMethod.addStatement("return new $N(context)", constructor);
+    createMethod.addStatement("return new $T(context)", generatingClass);
 
     classBuilder.addMethod(createMethod.build());
 
+    // clear method ---
+    MethodSpec.Builder clearMethod =
+        MethodSpec.methodBuilder("clear").addModifiers(Modifier.PUBLIC);
+    clearMethod.addStatement("prefs.edit().clear().apply()");
+
+    classBuilder.addMethod(clearMethod.build());
+
     // keys
     keys.forEach(keyAnnotatedField -> {
-      MethodSpec.Builder getterBuilder;
+      List<MethodSpec> methods = keyAnnotatedField.generate(prefsField, elementUtils);
 
+      classBuilder.addMethods(methods);
     });
+
+    JavaFile.builder(packageName, classBuilder.build()).build().writeTo(filer);
   }
 }

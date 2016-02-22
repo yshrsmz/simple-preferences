@@ -48,7 +48,7 @@ public class SettingsPrefs extends Settings {
     public void removeAdmin() {
     }
 
-    public void clearPrefs() {
+    public void clear() {
     }
 
     public static SettingsPrefs create(Context context) {
