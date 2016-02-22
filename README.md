@@ -27,7 +27,7 @@ public class SettingsPrefs extends Settings {
     public String getUserName() {
     }
 
-    public void putUserName(String userName)  {
+    public void setUserName(String userName)  {
     }
 
     public boolean hasUserName() {
@@ -39,7 +39,7 @@ public class SettingsPrefs extends Settings {
     public boolean isAdmin() {
     }
 
-    public boolean putAdmin(boolean admin) {
+    public boolean setAdmin(boolean admin) {
     }
 
     public boolean hasAdmin() {
@@ -49,6 +49,9 @@ public class SettingsPrefs extends Settings {
     }
 
     public void clearPrefs() {
+    }
+
+    public static SettingsPrefs create(Context context) {
     }
 }
 ```
