@@ -24,7 +24,7 @@ public class Settings {
   @Key
   Set<String> stringSetValue;
 
-  @Key
+  @Key(name = "specified_boolean_key")
   boolean booleanValue;
 
   @Key(omitGetterPrefix = true)

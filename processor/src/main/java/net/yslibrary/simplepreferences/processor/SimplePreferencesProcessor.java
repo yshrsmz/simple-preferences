@@ -1,6 +1,8 @@
 package net.yslibrary.simplepreferences.processor;
 
 import com.google.auto.service.AutoService;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeSpec;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,6 +24,7 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import net.yslibrary.simplepreferences.annotation.Preferences;
 import net.yslibrary.simplepreferences.processor.exception.ProcessingException;
+import net.yslibrary.simplepreferences.processor.writer.PreferenceWriter;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({
@@ -88,7 +91,8 @@ public class SimplePreferencesProcessor extends AbstractProcessor {
     // generate
     items.forEach((key, preferenceAnnotatedClass) -> {
       try {
-        preferenceAnnotatedClass.generate(elementUtils, filer);
+        TypeSpec clazz = (new PreferenceWriter(preferenceAnnotatedClass)).write();
+        JavaFile.builder(preferenceAnnotatedClass.packageName, clazz).build().writeTo(filer);
       } catch (IOException e) {
         error(null, e.getMessage());
       }
