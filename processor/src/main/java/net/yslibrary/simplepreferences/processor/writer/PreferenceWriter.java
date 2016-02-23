@@ -3,9 +3,11 @@ package net.yslibrary.simplepreferences.processor.writer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import java.util.List;
@@ -46,16 +48,16 @@ public class PreferenceWriter {
     // constructor
     MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PRIVATE)
-        .addParameter(Context.class, "context");
-    constructorBuilder.beginControlFlow("if (context == null)")
-        .addStatement("throw new NullPointerException($S)", "Context is Null!")
-        .endControlFlow();
+        .addParameter(
+            ParameterSpec.builder(Context.class, "context").addAnnotation(NonNull.class).build());
     if (useDefaultPreferences) {
-      constructorBuilder.addStatement("prefs = $T.getDefaultSharedPreferences(context)",
+      constructorBuilder.addStatement(
+          "prefs = $T.getDefaultSharedPreferences(context.getApplicationContext())",
           PreferenceManager.class);
     } else {
       constructorBuilder.addStatement(
-          "prefs = context.getSharedPreferences($S, Context.MODE_PRIVATE)", preferenceName);
+          "prefs = context.getApplicationContext().getSharedPreferences($S, Context.MODE_PRIVATE)",
+          preferenceName);
     }
     MethodSpec constructor = constructorBuilder.build();
     classBuilder.addMethod(constructor);
@@ -63,7 +65,8 @@ public class PreferenceWriter {
     // create method ---
     MethodSpec.Builder createMethod = MethodSpec.methodBuilder("create")
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-        .addParameter(Context.class, "context")
+        .addParameter(
+            ParameterSpec.builder(Context.class, "context").addAnnotation(NonNull.class).build())
         .returns(generatingClass);
 
     createMethod.beginControlFlow("if (context == null)")
