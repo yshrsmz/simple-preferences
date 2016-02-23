@@ -2,8 +2,9 @@ package net.yslibrary.simplepreferences.processor;
 
 import com.google.common.base.Strings;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -54,19 +55,27 @@ public class PreferenceAnnotatedClass {
     packageName = pkg.isUnnamed() ? null : pkg.getQualifiedName().toString();
 
     try {
-      List<KeyAnnotatedField> annotatedVariables = element.getEnclosedElements()
+      Map<String, KeyAnnotatedField> map = new LinkedHashMap<>();
+      element.getEnclosedElements()
           .stream()
           .filter(variable -> variable.getAnnotation(Key.class) != null)
-          .map(variable -> {
+          .forEach(variable -> {
             try {
-              return new KeyAnnotatedField((VariableElement) variable);
+              KeyAnnotatedField field = new KeyAnnotatedField((VariableElement) variable);
+              KeyAnnotatedField existing = map.get(field.preferenceKey);
+
+              if (existing != null) {
+                throw new ProcessingException(variable,
+                    "Conflict: Preference key of the field %s annotated with @%s is declared as '%s', but %s already uses same value",
+                    field.name, Key.class.getSimpleName(), field.preferenceKey, existing.name);
+              }
+              map.put(field.preferenceKey, field);
             } catch (ProcessingException e) {
               throw new RuntimeException(e);
             }
-          })
-          .collect(Collectors.toList());
+          });
 
-      keys.addAll(annotatedVariables);
+      keys.addAll(map.values());
     } catch (RuntimeException e) {
       if (e.getCause() instanceof ProcessingException) {
         throw (ProcessingException) e.getCause();
