@@ -4,7 +4,7 @@ Simple Preferences
 Android Library to simplify SharedPreferences use.
 
 
-define ordinary class
+define ordinary POJO.
 
 ```
 @Preferences
@@ -170,5 +170,7 @@ public class SettingsPrefs extends Settings {
   }
 }
 ```
+
+As you may noticed from generated getter method, the values you set in your POJO become default values for each keys.
 
 Generated classes will be placed at the same package as parent abstract classes.
