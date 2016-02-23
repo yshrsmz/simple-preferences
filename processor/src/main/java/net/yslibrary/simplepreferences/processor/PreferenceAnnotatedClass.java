@@ -23,7 +23,7 @@ import javax.lang.model.util.Elements;
 import net.yslibrary.simplepreferences.annotation.Key;
 import net.yslibrary.simplepreferences.annotation.Preferences;
 import net.yslibrary.simplepreferences.processor.exception.ProcessingException;
-import net.yslibrary.simplepreferences.processor.typewriter.TypeWriter;
+import net.yslibrary.simplepreferences.processor.writer.TypeWriter;
 
 /**
  * Created by yshrsmz on 2016/02/21.
@@ -102,7 +102,7 @@ public class PreferenceAnnotatedClass {
 
     // constructor
     MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder()
-        .addModifiers(Modifier.PUBLIC)
+        .addModifiers(Modifier.PRIVATE)
         .addParameter(Context.class, "context");
     constructorBuilder.beginControlFlow("if (context == null)")
         .addStatement("throw new NullPointerException($S)", "Context is Null!")
@@ -119,7 +119,7 @@ public class PreferenceAnnotatedClass {
 
     // create method ---
     MethodSpec.Builder createMethod = MethodSpec.methodBuilder("create")
-        .addModifiers(Modifier.PUBLIC)
+        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         .addParameter(Context.class, "context")
         .returns(generatingClass);
 

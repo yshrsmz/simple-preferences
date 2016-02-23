@@ -1,4 +1,4 @@
-package net.yslibrary.simplepreferences.processor.typewriter;
+package net.yslibrary.simplepreferences.processor.writer;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;

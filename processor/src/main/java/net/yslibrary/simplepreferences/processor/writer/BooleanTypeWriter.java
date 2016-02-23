@@ -1,4 +1,4 @@
-package net.yslibrary.simplepreferences.processor.typewriter;
+package net.yslibrary.simplepreferences.processor.writer;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
@@ -27,6 +27,6 @@ public class BooleanTypeWriter extends BaseTypeWriter {
 
   @Override
   protected String getGetterPrefix() {
-    return BOOLEAN_GETTER_PREFIX;
+    return BaseTypeWriter.BOOLEAN_GETTER_PREFIX;
   }
 }

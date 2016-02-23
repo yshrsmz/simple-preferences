@@ -1,4 +1,4 @@
-package net.yslibrary.simplepreferences.processor.typewriter;
+package net.yslibrary.simplepreferences.processor.writer;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
@@ -25,7 +25,8 @@ public class StringSetTypeWriter extends BaseTypeWriter {
 
   @Override
   public MethodSpec writeSetter(FieldSpec prefs) {
-    return MethodSpec.methodBuilder(SETTER_PREFIX + Utils.lowerToUpperCamel(annotatedField.name))
+    return MethodSpec.methodBuilder(
+        BaseTypeWriter.SETTER_PREFIX + Utils.lowerToUpperCamel(annotatedField.name))
         .addModifiers(Modifier.PUBLIC)
         .addParameter(ParameterizedTypeName.get(Set.class, String.class), "value")
         .addStatement("$N.edit().putStringSet($S, value).apply()", prefs,
