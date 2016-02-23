@@ -88,7 +88,6 @@ public class SimplePreferencesProcessor extends AbstractProcessor {
     // generate
     items.forEach((key, preferenceAnnotatedClass) -> {
       try {
-        System.out.println("write item: " + preferenceAnnotatedClass.preferenceClassName);
         preferenceAnnotatedClass.generate(elementUtils, filer);
       } catch (IOException e) {
         error(null, e.getMessage());

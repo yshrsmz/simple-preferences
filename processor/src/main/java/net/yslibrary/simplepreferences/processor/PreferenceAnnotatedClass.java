@@ -23,6 +23,7 @@ import javax.lang.model.util.Elements;
 import net.yslibrary.simplepreferences.annotation.Key;
 import net.yslibrary.simplepreferences.annotation.Preferences;
 import net.yslibrary.simplepreferences.processor.exception.ProcessingException;
+import net.yslibrary.simplepreferences.processor.typewriter.TypeWriter;
 
 /**
  * Created by yshrsmz on 2016/02/21.
@@ -139,7 +140,7 @@ public class PreferenceAnnotatedClass {
 
     // keys
     keys.forEach(keyAnnotatedField -> {
-      List<MethodSpec> methods = keyAnnotatedField.generate(prefsField, elementUtils);
+      List<MethodSpec> methods = TypeWriter.create(keyAnnotatedField).writeMethods(prefsField);
 
       classBuilder.addMethods(methods);
     });
