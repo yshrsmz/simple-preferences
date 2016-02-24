@@ -2,6 +2,7 @@ package net.yslibrary.simplepreferences.processor;
 
 import com.google.common.base.Strings;
 import com.squareup.javapoet.TypeName;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 import net.yslibrary.simplepreferences.annotation.Key;
 import net.yslibrary.simplepreferences.processor.exception.ProcessingException;
@@ -18,6 +19,10 @@ public class KeyAnnotatedField {
   public final boolean omitGetterPrefix;
 
   public KeyAnnotatedField(VariableElement element) throws ProcessingException {
+    if (element.getModifiers().contains(Modifier.PRIVATE)) {
+      throw new ProcessingException(element,
+          "Field %s is private, must be accessible from inherited class", element.getSimpleName());
+    }
     annotatedElement = element;
 
     type = TypeName.get(element.asType());
