@@ -7,7 +7,7 @@ import net.yslibrary.simplepreferences.annotation.Preferences;
 /**
  * Created by yshrsmz on 2016/02/22.
  */
-@Preferences
+@Preferences("settings")
 public class Settings {
   @Key
   int userId;

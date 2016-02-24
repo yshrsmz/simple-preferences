@@ -14,6 +14,12 @@ for (File file : sdkHandler.sdkLoader.repositories) {
   }
 }
 
+task copyTestResources(type: Copy) {
+  from "${projectDir}/src/test/resources"
+  into "${buildDir}/classes/test"
+}
+processTestResources.dependsOn copyTestResources
+
 dependencies {
 
   compile project(':annotations')
@@ -21,9 +27,13 @@ dependencies {
   compile deps.autocommon
   compile deps.javapoet
   compile deps.android
-  compile 'com.android.support:support-annotations:23.1.1'
+  compile deps.supportAnnotations
 
   testCompile deps.junit
   testCompile deps.truth
   testCompile deps.compiletesting
+  testCompile deps.commonsio
+  testCompile deps.android
+  testCompile deps.supportAnnotations
+  testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
 }
