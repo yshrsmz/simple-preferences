@@ -1,4 +1,4 @@
-package net.yslibrary.simplepreferences;
+package net.yslibrary.simplepreferences.example;
 
 import java.util.Set;
 import net.yslibrary.simplepreferences.annotation.Key;

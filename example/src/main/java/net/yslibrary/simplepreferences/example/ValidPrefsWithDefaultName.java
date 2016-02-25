@@ -1,4 +1,4 @@
-package net.yslibrary.simplepreferences;
+package net.yslibrary.simplepreferences.example;
 
 import java.util.HashSet;
 import java.util.Set;
