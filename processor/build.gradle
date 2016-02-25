@@ -1,7 +1,6 @@
 apply plugin: 'java'
+apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'com.github.ben-manes.versions'
-
-group = 'net.yslibrary.simplepreferences'
 
 targetCompatibility = JavaVersion.VERSION_1_8
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -36,4 +35,16 @@ dependencies {
   testCompile deps.android
   testCompile deps.supportAnnotations
   testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
+}
+
+publish {
+  artifactId = 'simplepreferences-processor'
+  desc = 'An annotation processor for SimplePreferences'
+
+  def metadata = project.rootProject.ext.metadata
+  groupId = metadata.groupId
+  publishVersion = metadata.version
+  website = metadata.website
+  repository = metadata.repository
+  licences = metadata.licences
 }

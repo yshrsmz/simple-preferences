@@ -1,4 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: "${project.rootDir}/gradle/version/version.gradle"
+apply from: "${project.rootDir}/metadata.gradle"
 
 buildscript {
   repositories {
@@ -6,10 +8,12 @@ buildscript {
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:1.5.0'
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
-    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
+
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
+    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    classpath 'com.novoda:bintray-release:0.3.4' // https://github.com/novoda/bintray-release
   }
 }
 
@@ -19,24 +23,34 @@ allprojects {
   }
 }
 
+ext {
+  deps = [// Android
+          android           : 'com.google.android:android:4.1.1.4',
+          supportv4         : 'com.android.support:support-v4:23.1.1',
+          appcompat         : 'com.android.support:appcompat-v7:23.1.1',
+          supportAnnotations: 'com.android.support:support-annotations:23.1.1',
+
+          // Square
+          javapoet          : 'com.squareup:javapoet:1.5.1',
+
+          // Test dependencies
+          junit             : 'junit:junit:4.12',
+          truth             : 'com.google.truth:truth:0.28',
+          robolectric       : 'org.robolectric:robolectric:3.1-SNAPSHOT',
+          compiletesting    : 'com.google.testing.compile:compile-testing:0.8',
+          autoservice       : 'com.google.auto.service:auto-service:1.0-rc2',
+          autocommon        : 'com.google.auto:auto-common:0.5',
+          commonsio         : 'commons-io:commons-io:2.4']
+
+  metadata.version = ext.versionName()
+}
+
+task genReadMe << {
+  def template = file('README.md.template').text
+  def result = template.replaceAll("%%version%%", metadata.version)
+  file("README.md").withWriter { it << result }
+}
+
 task clean(type: Delete) {
   delete rootProject.buildDir
 }
-
-ext.deps = [// Android
-            android           : 'com.google.android:android:4.1.1.4',
-            supportv4         : 'com.android.support:support-v4:23.1.1',
-            appcompat         : 'com.android.support:appcompat-v7:23.1.1',
-            supportAnnotations: 'com.android.support:support-annotations:23.1.1',
-
-            // Square
-            javapoet          : 'com.squareup:javapoet:1.5.1',
-
-            // Test dependencies
-            junit             : 'junit:junit:4.12',
-            truth             : 'com.google.truth:truth:0.28',
-            robolectric       : 'org.robolectric:robolectric:3.1-SNAPSHOT',
-            compiletesting    : 'com.google.testing.compile:compile-testing:0.8',
-            autoservice       : 'com.google.auto.service:auto-service:1.0-rc2',
-            autocommon        : 'com.google.auto:auto-common:0.5',
-            commonsio         : 'commons-io:commons-io:2.4']
