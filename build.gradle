@@ -54,3 +54,32 @@ task genReadMe << {
 task clean(type: Delete) {
   delete rootProject.buildDir
 }
+
+String shell(String command) {
+  def proc = ["sh", "-c", "cd ${project.rootDir} ; ${command}"].execute()
+  if (proc.waitFor() != 0) {
+    throw new RuntimeException("Failed to run: ${command}\n${proc.err.text}")
+  } else {
+    def err = proc.err.text
+    if (err) {
+      System.err.println(err)
+    }
+  }
+  return proc.in.text;
+}
+
+task releng << {
+  def tag = "v" + versionName()
+  println "Release engineering for ${tag}"
+
+  def changes = shell "git status -s"
+  if (changes.trim()) {
+    throw new RuntimeException("There are changes not commited yet.\n${changes}")
+  }
+
+  println "> git tag ${tag}"
+  shell "git tag ${tag}"
+  println "> git push origin ${tag}"
+  shell "git push origin ${tag}"
+  shell "git push origin master"
+}

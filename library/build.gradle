@@ -36,10 +36,9 @@ android {
 
 dependencies {
   compile project(':annotations')
+  compile deps.supportAnnotations
 
   testCompile deps.junit
-  compile deps.supportv4
-  compile deps.appcompat
 }
 
 publish {
