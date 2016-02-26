@@ -26,8 +26,8 @@ buildscript {
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-  apt 'net.yslibrary.simplepreferences:simplepreferences-processor:1.1.0'
-  compile 'net.yslibrary.simplepreferences:simplepreferences:1.1.0'
+  apt 'net.yslibrary.simplepreferences:simplepreferences-processor:%%version%%'
+  compile 'net.yslibrary.simplepreferences:simplepreferences:%%version%%'
 }
 ```
 
