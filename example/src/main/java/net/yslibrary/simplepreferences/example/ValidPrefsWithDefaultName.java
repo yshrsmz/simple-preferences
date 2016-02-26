@@ -8,7 +8,7 @@ import net.yslibrary.simplepreferences.annotation.Preferences;
 /**
  * Created by yshrsmz on 2016/02/24.
  */
-@Preferences
+@Preferences(useDefault = true)
 public class ValidPrefsWithDefaultName {
 
   @Key

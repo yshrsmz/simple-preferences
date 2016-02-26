@@ -3,6 +3,7 @@ package net.yslibrary.simplepreferences.processor;
 import com.google.testing.compile.JavaFileObjects;
 import java.util.Arrays;
 import javax.tools.JavaFileObject;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assert_;
@@ -46,5 +47,11 @@ public class SimplePreferencesProcessorTest {
         .withErrorCount(1)
         .withErrorContaining(
             "Conflict: Class net.yslibrary.simplepreferences.processor.PrefsWithSameNameB is annotated with @Preferences with value='custom_name', but net.yslibrary.simplepreferences.processor.PrefsWithSameNameA already uses same value");
+  }
+
+  @Test
+  @Ignore
+  public void testDuplicateKeyName() {
+
   }
 }

@@ -18,7 +18,7 @@ import net.yslibrary.simplepreferences.processor.exception.ProcessingException;
  */
 public class PreferenceAnnotatedClass {
 
-  public final static String DEFAULT_PREFS = "default";
+  public final static String DEFAULT_PREFS = "net.yslibrary.simplepreferences.default_name";
   private final static String SUFFIX = "Prefs";
 
   public final TypeElement annotatedElement;
@@ -39,8 +39,15 @@ public class PreferenceAnnotatedClass {
     annotatedElement = element;
     Preferences annotation = annotatedElement.getAnnotation(Preferences.class);
     String value = annotation.value().trim();
+    boolean useDefault = annotation.useDefault();
     String simpleName = element.getSimpleName().toString();
-    preferenceName = Strings.isNullOrEmpty(value) ? DEFAULT_PREFS : value;
+
+    if (useDefault) {
+      preferenceName = DEFAULT_PREFS;
+    } else {
+      preferenceName =
+          Strings.isNullOrEmpty(value) ? Utils.lowerCamelToLowerSnake(simpleName) : value;
+    }
 
     if (Strings.isNullOrEmpty(preferenceName)) {
       throw new IllegalStateException(String.format(

@@ -19,4 +19,11 @@ public @interface Preferences {
    * @return
    */
   String value() default "";
+
+  /**
+   * whether or not use DefaultSharedPreferences
+   *
+   * @return
+   */
+  boolean useDefault() default false;
 }
