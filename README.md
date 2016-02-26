@@ -134,7 +134,7 @@ Generated classes will be placed at the same package as parent classes.
 Declare annotated class as SharedPreferences model.
 
 | parameter | description | default vale |
-|---|---|
+|---|---|---|
 | `value` | SharedPreferences name | empty (class name is converted to lower_snake_case and used as SharedPreferences name) |
 | `useDefault` | use DefaultSharedPreferences or not | false |
 
@@ -146,7 +146,7 @@ Declare annotated variable as SharedPreferences key.
 #### parameters
 
 | parameter | description | default vale |
-|---|---|
+|---|---|---|
 | `name` | preference's key name | empty (variable name is converted to lower_snake_case and used as key) |
 | `omitGetterPrefix` | whether or not prepend prefix for getter method | false (prepend prefix) |
 
