@@ -143,8 +143,6 @@ Declare annotated class as SharedPreferences model.
 
 Declare annotated variable as SharedPreferences key.
 
-#### parameters
-
 | parameter | description | default vale |
 |---|---|---|
 | `name` | preference's key name | empty (variable name is converted to lower_snake_case and used as key) |
