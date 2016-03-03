@@ -1,6 +1,8 @@
 Simple Preferences
 ===
 
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Simple%20Preferences-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3233)
+
 Simple Preference is a SharedPreference Manager generator.
 
 The library generates code for managing SharedPreferences at compile time with Annotation Processor.  
