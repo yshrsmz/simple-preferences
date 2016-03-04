@@ -17,7 +17,7 @@ Currently the library supports `get`/`set`/`has`/`remove` operation for each key
 
 This library requires JDK8 to run annotation processor.
 
-```
+```groovy
 // distributed via jCenter
 buildscript {
   dependencies {
@@ -37,7 +37,7 @@ dependencies {
 
 define ordinary POJO with `@Preferences` and `@Key`.
 
-```
+```java
 @Preferences
 public class Config {
   // you'd better define these variable as protected to avoid accidental access
@@ -56,7 +56,7 @@ public class Config {
 
 and following class is generated
 
-```
+```java
 public class ConfigPrefs extends Config {
   private final SharedPreferences prefs;
 
