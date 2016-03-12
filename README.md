@@ -28,8 +28,8 @@ buildscript {
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-  apt 'net.yslibrary.simplepreferences:simplepreferences-processor:1.1.0'
-  compile 'net.yslibrary.simplepreferences:simplepreferences:1.1.0'
+  apt 'net.yslibrary.simplepreferences:simplepreferences-processor:1.2.0'
+  compile 'net.yslibrary.simplepreferences:simplepreferences:1.2.0'
 }
 ```
 
@@ -75,8 +75,9 @@ public class ConfigPrefs extends Config {
     prefs.edit().clear().apply();
   }
 
-  public void setUserId(int value) {
+  public ConfigPrefs setUserId(int value) {
     prefs.edit().putInt("user_id", value).apply();
+    return this;
   }
 
   public int getUserId() {
@@ -87,12 +88,14 @@ public class ConfigPrefs extends Config {
     return prefs.contains("user_id");
   }
 
-  public void removeUserId() {
+  public ConfigPrefs removeUserId() {
     prefs.edit().remove("user_id").apply();
+    return this;
   }
 
-  public void setUserName(String value) {
+  public ConfigPrefs setUserName(String value) {
     prefs.edit().putString("user_name", value).apply();
+    return this;
   }
 
   public String getUserName() {
@@ -103,12 +106,14 @@ public class ConfigPrefs extends Config {
     return prefs.contains("user_name");
   }
 
-  public void removeUserName() {
+  public ConfigPrefs removeUserName() {
     prefs.edit().remove("user_name").apply();
+    return this;
   }
 
-  public void setIsPremium(boolean value) {
+  public ConfigPrefs setIsPremium(boolean value) {
     prefs.edit().putBoolean("is_premium", value).apply();
+    return this;
   }
 
   public boolean isPremium() {
@@ -119,8 +124,9 @@ public class ConfigPrefs extends Config {
     return prefs.contains("is_premium");
   }
 
-  public void removeIsPremium() {
+  public ConfigPrefs removeIsPremium() {
     prefs.edit().remove("is_premium").apply();
+    return this;
   }
 }
 ```
