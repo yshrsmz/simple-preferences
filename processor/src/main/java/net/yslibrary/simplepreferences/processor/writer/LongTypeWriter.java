@@ -2,14 +2,15 @@ package net.yslibrary.simplepreferences.processor.writer;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeName;
 import net.yslibrary.simplepreferences.processor.KeyAnnotatedField;
 
 /**
  * Created by yshrsmz on 2016/02/23.
  */
 public class LongTypeWriter extends BaseTypeWriter {
-  protected LongTypeWriter(KeyAnnotatedField keyAnnotatedField) {
-    super(keyAnnotatedField);
+  protected LongTypeWriter(TypeName enclosingClassName, KeyAnnotatedField keyAnnotatedField) {
+    super(enclosingClassName, keyAnnotatedField);
   }
 
   @Override
@@ -21,6 +22,6 @@ public class LongTypeWriter extends BaseTypeWriter {
   @Override
   public MethodSpec writeSetter(FieldSpec prefs) {
     return getBaseSetterBuilder(long.class).addStatement("$N.edit().putLong($S, value).apply()",
-        prefs, annotatedField.preferenceKey).build();
+        prefs, annotatedField.preferenceKey).addStatement("return this").build();
   }
 }

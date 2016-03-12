@@ -2,6 +2,7 @@ package net.yslibrary.simplepreferences.processor.writer;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeName;
 import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.Modifier;
@@ -18,9 +19,11 @@ public abstract class BaseTypeWriter implements TypeWriter {
   protected final static String EXIST_PREFIX = "has";
   protected final static String REMOVE_PREFIX = "remove";
 
+  protected final TypeName enclosingClassName;
   protected final KeyAnnotatedField annotatedField;
 
-  protected BaseTypeWriter(KeyAnnotatedField annotatedField) {
+  protected BaseTypeWriter(TypeName enclosingClassName, KeyAnnotatedField annotatedField) {
+    this.enclosingClassName = enclosingClassName;
     this.annotatedField = annotatedField;
   }
 
@@ -39,7 +42,9 @@ public abstract class BaseTypeWriter implements TypeWriter {
   public MethodSpec writeRemover(FieldSpec prefs) {
     return MethodSpec.methodBuilder(REMOVE_PREFIX + Utils.lowerToUpperCamel(annotatedField.name))
         .addModifiers(Modifier.PUBLIC)
+        .returns(enclosingClassName)
         .addStatement("$N.edit().remove($S).apply()", prefs, annotatedField.preferenceKey)
+        .addStatement("return this")
         .build();
   }
 
@@ -59,6 +64,7 @@ public abstract class BaseTypeWriter implements TypeWriter {
   protected MethodSpec.Builder getBaseGetterBuilder() {
     String methodName = annotatedField.omitGetterPrefix ? annotatedField.name
         : getGetterPrefix() + Utils.lowerToUpperCamel(annotatedField.name);
+
     return MethodSpec.methodBuilder(methodName)
         .addModifiers(Modifier.PUBLIC)
         .returns(annotatedField.type);
@@ -67,6 +73,7 @@ public abstract class BaseTypeWriter implements TypeWriter {
   protected MethodSpec.Builder getBaseSetterBuilder(Class<?> parameterClass) {
     return MethodSpec.methodBuilder(SETTER_PREFIX + Utils.lowerToUpperCamel(annotatedField.name))
         .addModifiers(Modifier.PUBLIC)
+        .returns(enclosingClassName)
         .addParameter(parameterClass, "value");
   }
 }

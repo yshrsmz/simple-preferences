@@ -85,7 +85,8 @@ public class PreferenceWriter {
 
     // keys
     annotatedClass.keys.forEach(keyAnnotatedField -> {
-      List<MethodSpec> methods = TypeWriter.create(keyAnnotatedField).writeMethods(prefsField);
+      List<MethodSpec> methods =
+          TypeWriter.create(generatingClass, keyAnnotatedField).writeMethods(prefsField);
 
       classBuilder.addMethods(methods);
     });

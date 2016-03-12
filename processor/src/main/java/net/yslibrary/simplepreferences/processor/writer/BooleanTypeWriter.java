@@ -2,6 +2,7 @@ package net.yslibrary.simplepreferences.processor.writer;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeName;
 import net.yslibrary.simplepreferences.processor.KeyAnnotatedField;
 
 /**
@@ -9,8 +10,8 @@ import net.yslibrary.simplepreferences.processor.KeyAnnotatedField;
  */
 public class BooleanTypeWriter extends BaseTypeWriter {
 
-  protected BooleanTypeWriter(KeyAnnotatedField keyAnnotatedField) {
-    super(keyAnnotatedField);
+  protected BooleanTypeWriter(TypeName enclosingClassName, KeyAnnotatedField keyAnnotatedField) {
+    super(enclosingClassName, keyAnnotatedField);
   }
 
   @Override
@@ -22,7 +23,9 @@ public class BooleanTypeWriter extends BaseTypeWriter {
   @Override
   public MethodSpec writeSetter(FieldSpec prefs) {
     return getBaseSetterBuilder(boolean.class).addStatement(
-        "$N.edit().putBoolean($S, value).apply()", prefs, annotatedField.preferenceKey).build();
+        "$N.edit().putBoolean($S, value).apply()", prefs, annotatedField.preferenceKey)
+        .addStatement("return this")
+        .build();
   }
 
   @Override

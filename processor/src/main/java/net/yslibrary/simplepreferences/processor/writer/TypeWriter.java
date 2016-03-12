@@ -13,21 +13,21 @@ import net.yslibrary.simplepreferences.processor.KeyAnnotatedField;
  */
 public interface TypeWriter {
 
-  static TypeWriter create(KeyAnnotatedField field) {
+  static TypeWriter create(TypeName enclosingClassName, KeyAnnotatedField field) {
     TypeName typeName = field.type;
 
     if (TypeName.BOOLEAN.equals(typeName)) {
-      return new BooleanTypeWriter(field);
+      return new BooleanTypeWriter(enclosingClassName, field);
     } else if (TypeName.get(String.class).equals(typeName)) {
-      return new StringTypeWriter(field);
+      return new StringTypeWriter(enclosingClassName, field);
     } else if (TypeName.INT.equals(typeName)) {
-      return new IntTypeWriter(field);
+      return new IntTypeWriter(enclosingClassName, field);
     } else if (TypeName.FLOAT.equals(typeName)) {
-      return new FloatTypeWriter(field);
+      return new FloatTypeWriter(enclosingClassName, field);
     } else if (TypeName.LONG.equals(typeName)) {
-      return new LongTypeWriter(field);
+      return new LongTypeWriter(enclosingClassName, field);
     } else if (ParameterizedTypeName.get(Set.class, String.class).equals(typeName)) {
-      return new StringSetTypeWriter(field);
+      return new StringSetTypeWriter(enclosingClassName, field);
     } else {
       throw new IllegalArgumentException(
           String.format("TypeName: %s is not allowed", typeName.toString()));

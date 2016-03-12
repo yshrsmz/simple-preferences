@@ -2,6 +2,7 @@ package net.yslibrary.simplepreferences.processor.writer;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeName;
 import net.yslibrary.simplepreferences.processor.KeyAnnotatedField;
 
 /**
@@ -9,8 +10,8 @@ import net.yslibrary.simplepreferences.processor.KeyAnnotatedField;
  */
 public class FloatTypeWriter extends BaseTypeWriter {
 
-  protected FloatTypeWriter(KeyAnnotatedField keyAnnotatedField) {
-    super(keyAnnotatedField);
+  protected FloatTypeWriter(TypeName enclosingClassName, KeyAnnotatedField keyAnnotatedField) {
+    super(enclosingClassName, keyAnnotatedField);
   }
 
   @Override
@@ -22,6 +23,6 @@ public class FloatTypeWriter extends BaseTypeWriter {
   @Override
   public MethodSpec writeSetter(FieldSpec prefs) {
     return getBaseSetterBuilder(float.class).addStatement("$N.edit().putFloat($S, value).apply()",
-        prefs, annotatedField.preferenceKey).build();
+        prefs, annotatedField.preferenceKey).addStatement("return this").build();
   }
 }
