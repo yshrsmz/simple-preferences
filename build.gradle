@@ -31,7 +31,7 @@ ext {
           supportAnnotations: 'com.android.support:support-annotations:23.2.1',
 
           // Square
-          javapoet          : 'com.squareup:javapoet:1.5.1',
+          javapoet          : 'com.squareup:javapoet:1.6.0',
 
           // Test dependencies
           junit             : 'junit:junit:4.12',
