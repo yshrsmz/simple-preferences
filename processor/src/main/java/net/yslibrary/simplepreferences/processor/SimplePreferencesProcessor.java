@@ -28,7 +28,8 @@ import net.yslibrary.simplepreferences.processor.writer.PreferenceWriter;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({
-    "net.yslibrary.simplepreferences.annotation.*"
+    "net.yslibrary.simplepreferences.annotation.Key",
+    "net.yslibrary.simplepreferences.annotation.Preferences"
 })
 @AutoService(Processor.class)
 public class SimplePreferencesProcessor extends AbstractProcessor {
