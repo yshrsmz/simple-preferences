@@ -187,6 +187,7 @@
           <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="1" />
           <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
           <option name="KEEP_BLANK_LINES_BEFORE_RBRACE" value="0" />
+          <option name="ALIGN_MULTILINE_CHAINED_METHODS" value="true" />
           <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
           <option name="ALIGN_MULTILINE_FOR" value="false" />
           <option name="SPACE_WITHIN_ARRAY_INITIALIZER_BRACES" value="true" />
@@ -198,7 +199,7 @@
           <option name="THROWS_LIST_WRAP" value="1" />
           <option name="EXTENDS_KEYWORD_WRAP" value="1" />
           <option name="THROWS_KEYWORD_WRAP" value="1" />
-          <option name="METHOD_CALL_CHAIN_WRAP" value="5" />
+          <option name="METHOD_CALL_CHAIN_WRAP" value="1" />
           <option name="BINARY_OPERATION_WRAP" value="1" />
           <option name="BINARY_OPERATION_SIGN_ON_NEXT_LINE" value="true" />
           <option name="TERNARY_OPERATION_WRAP" value="1" />

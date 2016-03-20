@@ -20,20 +20,18 @@ public class StringSetTypeWriter extends BaseTypeWriter {
 
   @Override
   public MethodSpec writeGetter(FieldSpec prefs) {
-    return getBaseGetterBuilder().addStatement("return $N.getStringSet($S, $L)", prefs,
-        annotatedField.preferenceKey, annotatedField.name).build();
+    return getBaseGetterBuilder()
+        .addStatement("return $N.getStringSet($S, $L)", prefs, annotatedField.preferenceKey,
+            annotatedField.name).build();
   }
 
   @Override
   public MethodSpec writeSetter(FieldSpec prefs) {
-    return MethodSpec.methodBuilder(
-        BaseTypeWriter.SETTER_PREFIX + Utils.lowerToUpperCamel(annotatedField.name))
-        .addModifiers(Modifier.PUBLIC)
-        .returns(enclosingClassName)
+    return MethodSpec
+        .methodBuilder(BaseTypeWriter.SETTER_PREFIX + Utils.lowerToUpperCamel(annotatedField.name))
+        .addModifiers(Modifier.PUBLIC).returns(enclosingClassName)
         .addParameter(ParameterizedTypeName.get(Set.class, String.class), "value")
         .addStatement("$N.edit().putStringSet($S, value).apply()", prefs,
-            annotatedField.preferenceKey)
-        .addStatement("return this")
-        .build();
+            annotatedField.preferenceKey).addStatement("return this").build();
   }
 }

@@ -15,13 +15,15 @@ public class LongTypeWriter extends BaseTypeWriter {
 
   @Override
   public MethodSpec writeGetter(FieldSpec prefs) {
-    return getBaseGetterBuilder().addStatement("return $N.getLong($S, $L)", prefs,
-        annotatedField.preferenceKey, annotatedField.name).build();
+    return getBaseGetterBuilder()
+        .addStatement("return $N.getLong($S, $L)", prefs, annotatedField.preferenceKey,
+            annotatedField.name).build();
   }
 
   @Override
   public MethodSpec writeSetter(FieldSpec prefs) {
-    return getBaseSetterBuilder(long.class).addStatement("$N.edit().putLong($S, value).apply()",
-        prefs, annotatedField.preferenceKey).addStatement("return this").build();
+    return getBaseSetterBuilder(long.class)
+        .addStatement("$N.edit().putLong($S, value).apply()", prefs, annotatedField.preferenceKey)
+        .addStatement("return this").build();
   }
 }
