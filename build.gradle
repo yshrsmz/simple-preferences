@@ -45,12 +45,6 @@ ext {
   metadata.version = ext.versionName()
 }
 
-task genReadMe << {
-  def template = file('README.md.template').text
-  def result = template.replaceAll("%%version%%", metadata.version)
-  file("README.md").withWriter { it << result }
-}
-
 task clean(type: Delete) {
   delete rootProject.buildDir
 }
