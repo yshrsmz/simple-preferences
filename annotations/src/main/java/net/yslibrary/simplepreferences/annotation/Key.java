@@ -26,4 +26,12 @@ public @interface Key {
    * @return true if you use variable name as a name for its setter method
    */
   boolean omitGetterPrefix() default false;
+
+  /**
+   * whether or not create additional setter method which use SharedPreferences.Editor#commit().
+   * this is useful when you want to write to the backing file synchronously.
+   *
+   * @return true if you want synchronous method
+   */
+  boolean needCommitMethod() default false;
 }

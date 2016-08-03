@@ -2,10 +2,12 @@ package net.yslibrary.simplepreferences.processor;
 
 import com.google.common.base.Strings;
 import com.squareup.javapoet.TypeName;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.VariableElement;
+
 import net.yslibrary.simplepreferences.annotation.Key;
 import net.yslibrary.simplepreferences.processor.exception.ProcessingException;
+
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
 
 /**
  * Created by yshrsmz on 2016/02/21.
@@ -17,6 +19,7 @@ public class KeyAnnotatedField {
   public final String name;
   public final String preferenceKey;
   public final boolean omitGetterPrefix;
+  public final boolean needCommitMethod;
 
   public KeyAnnotatedField(VariableElement element) throws ProcessingException {
     if (element.getModifiers().contains(Modifier.PRIVATE)) {
@@ -32,5 +35,6 @@ public class KeyAnnotatedField {
     preferenceKey = Strings.isNullOrEmpty(annotation.name()) ? Utils.lowerCamelToLowerSnake(name)
         : annotation.name();
     omitGetterPrefix = annotation.omitGetterPrefix();
+    needCommitMethod = annotation.needCommitMethod();
   }
 }

@@ -3,6 +3,7 @@ package net.yslibrary.simplepreferences.processor.writer;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
+
 import net.yslibrary.simplepreferences.processor.KeyAnnotatedField;
 
 /**
@@ -16,14 +17,23 @@ public class BooleanTypeWriter extends BaseTypeWriter {
 
   @Override
   public MethodSpec writeGetter(FieldSpec prefs) {
-    return getBaseGetterBuilder().addStatement("return $N.getBoolean($S, $L)", prefs,
-        annotatedField.preferenceKey, annotatedField.name).build();
+    return getBaseGetterBuilder()
+        .addStatement("return $N.getBoolean($S, $L)", prefs, annotatedField.preferenceKey, annotatedField.name)
+        .build();
   }
 
   @Override
   public MethodSpec writeSetter(FieldSpec prefs) {
-    return getBaseSetterBuilder(boolean.class).addStatement(
-        "$N.edit().putBoolean($S, value).apply()", prefs, annotatedField.preferenceKey)
+    return getBaseSetterBuilder(boolean.class)
+        .addStatement("$N.edit().putBoolean($S, value).apply()", prefs, annotatedField.preferenceKey)
+        .addStatement("return this")
+        .build();
+  }
+
+  @Override
+  public MethodSpec writeSetterWithCommit(FieldSpec prefs) {
+    return getBaseSetterWithCommitBuilder(boolean.class)
+        .addStatement("$N.edit().putBoolean($S, value).commit()", prefs, annotatedField.preferenceKey)
         .addStatement("return this")
         .build();
   }

@@ -29,4 +29,10 @@ public class Settings {
 
   @Key(omitGetterPrefix = true)
   boolean someBooleanValue;
+
+  @Key(omitGetterPrefix = true, needCommitMethod = true)
+  boolean someBooleanValueForSyncOperation;
+
+  @Key(needCommitMethod = true)
+  String someStringValueForSyncOperation;
 }

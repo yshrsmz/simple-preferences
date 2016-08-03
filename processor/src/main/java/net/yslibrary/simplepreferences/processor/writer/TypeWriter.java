@@ -4,9 +4,11 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
+
+import net.yslibrary.simplepreferences.processor.KeyAnnotatedField;
+
 import java.util.List;
 import java.util.Set;
-import net.yslibrary.simplepreferences.processor.KeyAnnotatedField;
 
 /**
  * Created by yshrsmz on 2016/02/23.
@@ -41,6 +43,10 @@ public interface TypeWriter {
   MethodSpec writeExists(FieldSpec prefs);
 
   MethodSpec writeRemover(FieldSpec prefs);
+
+  MethodSpec writeSetterWithCommit(FieldSpec prefs);
+
+  MethodSpec writeRemoverWithCommit(FieldSpec prefs);
 
   List<MethodSpec> writeMethods(FieldSpec prefs);
 }

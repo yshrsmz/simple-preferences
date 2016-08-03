@@ -155,9 +155,10 @@ Declare annotated variable as SharedPreferences key.
 |---|---|---|
 | `name` | preference's key name | empty (variable name is converted to lower_snake_case and used as key) |
 | `omitGetterPrefix` | whether or not prepend prefix for getter method | false (prepend prefix) |
+| `needCommitMethod` | whether or not create additional setter method which use SharedPreferences.Editor#commit() | false(disabled) |
 
 `omitGetterPrefix` is useful when you define boolean value.
-
+`needCommitMethod` is useful when you want to write to the backing file synchronously.
 
 
 License

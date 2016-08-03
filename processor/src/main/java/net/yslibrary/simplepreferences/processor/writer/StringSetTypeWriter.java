@@ -4,10 +4,13 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
-import java.util.Set;
-import javax.lang.model.element.Modifier;
+
 import net.yslibrary.simplepreferences.processor.KeyAnnotatedField;
 import net.yslibrary.simplepreferences.processor.Utils;
+
+import java.util.Set;
+
+import javax.lang.model.element.Modifier;
 
 /**
  * Created by yshrsmz on 2016/02/23.
@@ -29,9 +32,23 @@ public class StringSetTypeWriter extends BaseTypeWriter {
   public MethodSpec writeSetter(FieldSpec prefs) {
     return MethodSpec
         .methodBuilder(BaseTypeWriter.SETTER_PREFIX + Utils.lowerToUpperCamel(annotatedField.name))
-        .addModifiers(Modifier.PUBLIC).returns(enclosingClassName)
+        .addModifiers(Modifier.PUBLIC)
+        .returns(enclosingClassName)
         .addParameter(ParameterizedTypeName.get(Set.class, String.class), "value")
-        .addStatement("$N.edit().putStringSet($S, value).apply()", prefs,
-            annotatedField.preferenceKey).addStatement("return this").build();
+        .addStatement("$N.edit().putStringSet($S, value).apply()", prefs, annotatedField.preferenceKey)
+        .addStatement("return this")
+        .build();
+  }
+
+  @Override
+  public MethodSpec writeSetterWithCommit(FieldSpec prefs) {
+    return MethodSpec
+        .methodBuilder(BaseTypeWriter.SETTER_PREFIX + Utils.lowerToUpperCamel(annotatedField.name) + WITH_COMMIT_SUFFIX)
+        .addModifiers(Modifier.PUBLIC)
+        .returns(enclosingClassName)
+        .addParameter(ParameterizedTypeName.get(Set.class, String.class), "value")
+        .addStatement("$N.edit().putStringSet($S, value).commit()", prefs, annotatedField.preferenceKey)
+        .addStatement("return this")
+        .build();
   }
 }

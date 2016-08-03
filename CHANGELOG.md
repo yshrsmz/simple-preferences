@@ -1,3 +1,9 @@
+## 1.3.0 - TBD
+
+### Enhancements
+
+- Setter/Remover method with `SharedPreferences.Editor#commit()` is now available. You need to enable it with `@Key(needCommitMethod = true)`
+
 ## 1.2.0 - 2016/03/12
 
 ### Enhancements
