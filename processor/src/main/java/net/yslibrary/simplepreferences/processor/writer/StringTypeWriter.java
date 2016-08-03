@@ -17,8 +17,17 @@ public class StringTypeWriter extends BaseTypeWriter {
 
   @Override
   public MethodSpec writeGetter(FieldSpec prefs) {
-    return getBaseGetterBuilder().addStatement("return $N.getString($S, $L)", prefs,
-        annotatedField.preferenceKey, annotatedField.name).build();
+    return getBaseGetterBuilder()
+        .addStatement("return $N.getString($S, $L)", prefs, annotatedField.preferenceKey, annotatedField.name)
+        .build();
+  }
+
+  @Override
+  public MethodSpec writeGetterWithDefaultValue(FieldSpec prefs) {
+    return getBaseGetterBuilder()
+        .addParameter(String.class, PARAM_DEFAULT_VALUE)
+        .addStatement("return $N.getString($S, $L)", prefs, annotatedField.preferenceKey, PARAM_DEFAULT_VALUE)
+        .build();
   }
 
   @Override

@@ -23,9 +23,17 @@ public class FloatTypeWriter extends BaseTypeWriter {
   }
 
   @Override
+  public MethodSpec writeGetterWithDefaultValue(FieldSpec prefs) {
+    return getBaseGetterBuilder()
+        .addParameter(float.class, PARAM_DEFAULT_VALUE)
+        .addStatement("return $N.getFloat($S, $L)", prefs, annotatedField.preferenceKey, PARAM_DEFAULT_VALUE)
+        .build();
+  }
+
+  @Override
   public MethodSpec writeSetter(FieldSpec prefs) {
     return getBaseSetterBuilder(float.class)
-        .addStatement("$N.edit().putFloat($S, value).apply()", prefs, annotatedField.preferenceKey)
+        .addStatement("$N.edit().putFloat($S, $L).apply()", prefs, annotatedField.preferenceKey, PARAM_VALUE)
         .addStatement("return this")
         .build();
   }
@@ -33,7 +41,7 @@ public class FloatTypeWriter extends BaseTypeWriter {
   @Override
   public MethodSpec writeSetterWithCommit(FieldSpec prefs) {
     return getBaseSetterWithCommitBuilder(float.class)
-        .addStatement("$N.edit().putFloat($S, value).commit()", prefs, annotatedField.preferenceKey)
+        .addStatement("$N.edit().putFloat($S, $L).commit()", prefs, annotatedField.preferenceKey, PARAM_VALUE)
         .addStatement("return this")
         .build();
   }

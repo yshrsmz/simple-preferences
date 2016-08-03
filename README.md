@@ -84,6 +84,10 @@ public class ConfigPrefs extends Config {
     return prefs.getInt("user_id", userId);
   }
 
+  public int getUserId(int defaultValue) {
+    return prefs.getInt("user_id", defaultValue);
+  }
+
   public boolean hasUserId() {
     return prefs.contains("user_id");
   }
@@ -100,6 +104,10 @@ public class ConfigPrefs extends Config {
 
   public String getUserName() {
     return prefs.getString("user_name", userName);
+  }
+
+  public String getUserName(String defaultValue) {
+    return prefs.getString("user_name", defaultValue);
   }
 
   public boolean hasUserName() {
@@ -120,6 +128,10 @@ public class ConfigPrefs extends Config {
     return prefs.getBoolean("is_premium", isPremium);
   }
 
+  public boolean isPremium(boolean defaultValue) {
+    return prefs.getBoolean("is_premium", defaultValue);
+  }
+
   public boolean hasIsPremium() {
     return prefs.contains("is_premium");
   }
@@ -132,6 +144,7 @@ public class ConfigPrefs extends Config {
 ```
 
 As you may noticed from generated getter method, the values you set in your POJO become default values for each keys.
+Also you can provide custom default value with overloaded method.
 
 Generated classes will be placed at the same package as parent classes.
 
@@ -155,7 +168,7 @@ Declare annotated variable as SharedPreferences key.
 |---|---|---|
 | `name` | preference's key name | empty (variable name is converted to lower_snake_case and used as key) |
 | `omitGetterPrefix` | whether or not prepend prefix for getter method | false (prepend prefix) |
-| `needCommitMethod` | whether or not create additional setter method which use SharedPreferences.Editor#commit() | false(disabled) |
+| `needCommitMethod` | whether or not create additional setter method which use `SharedPreferences.Editor#commit()` | false (disabled) |
 
 `omitGetterPrefix` is useful when you define boolean value.
 `needCommitMethod` is useful when you want to write to the backing file synchronously.

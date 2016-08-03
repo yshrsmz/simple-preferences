@@ -24,8 +24,16 @@ public class StringSetTypeWriter extends BaseTypeWriter {
   @Override
   public MethodSpec writeGetter(FieldSpec prefs) {
     return getBaseGetterBuilder()
-        .addStatement("return $N.getStringSet($S, $L)", prefs, annotatedField.preferenceKey,
-            annotatedField.name).build();
+        .addStatement("return $N.getStringSet($S, $L)", prefs, annotatedField.preferenceKey, annotatedField.name)
+        .build();
+  }
+
+  @Override
+  public MethodSpec writeGetterWithDefaultValue(FieldSpec prefs) {
+    return getBaseGetterBuilder()
+        .addParameter(annotatedField.type, PARAM_DEFAULT_VALUE)
+        .addStatement("return $N.getStringSet($S, $L)", prefs, annotatedField.preferenceKey, PARAM_DEFAULT_VALUE)
+        .build();
   }
 
   @Override
@@ -34,8 +42,8 @@ public class StringSetTypeWriter extends BaseTypeWriter {
         .methodBuilder(BaseTypeWriter.SETTER_PREFIX + Utils.lowerToUpperCamel(annotatedField.name))
         .addModifiers(Modifier.PUBLIC)
         .returns(enclosingClassName)
-        .addParameter(ParameterizedTypeName.get(Set.class, String.class), "value")
-        .addStatement("$N.edit().putStringSet($S, value).apply()", prefs, annotatedField.preferenceKey)
+        .addParameter(annotatedField.type, PARAM_VALUE)
+        .addStatement("$N.edit().putStringSet($S, $L).apply()", prefs, annotatedField.preferenceKey, PARAM_VALUE)
         .addStatement("return this")
         .build();
   }
@@ -46,8 +54,8 @@ public class StringSetTypeWriter extends BaseTypeWriter {
         .methodBuilder(BaseTypeWriter.SETTER_PREFIX + Utils.lowerToUpperCamel(annotatedField.name) + WITH_COMMIT_SUFFIX)
         .addModifiers(Modifier.PUBLIC)
         .returns(enclosingClassName)
-        .addParameter(ParameterizedTypeName.get(Set.class, String.class), "value")
-        .addStatement("$N.edit().putStringSet($S, value).commit()", prefs, annotatedField.preferenceKey)
+        .addParameter(annotatedField.type, PARAM_VALUE)
+        .addStatement("$N.edit().putStringSet($S, $L).commit()", prefs, annotatedField.preferenceKey, PARAM_VALUE)
         .addStatement("return this")
         .build();
   }

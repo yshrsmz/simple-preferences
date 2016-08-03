@@ -16,17 +16,18 @@ import javax.lang.model.element.Modifier;
  * Created by yshrsmz on 2016/02/23.
  */
 public abstract class BaseTypeWriter implements TypeWriter {
-  protected final static String GETTER_PREFIX = "get";
-  protected final static String BOOLEAN_GETTER_PREFIX = "is";
-  protected final static String SETTER_PREFIX = "set";
-  protected final static String EXIST_PREFIX = "has";
-  protected final static String REMOVE_PREFIX = "remove";
-  protected final static String WITH_COMMIT_SUFFIX = "WithCommit";
+  final static String BOOLEAN_GETTER_PREFIX = "is";
+  final static String SETTER_PREFIX = "set";
+  final static String WITH_COMMIT_SUFFIX = "WithCommit";
+  final static String PARAM_VALUE = "value";
+  final static String PARAM_DEFAULT_VALUE = "defaultValue";
+  final static String GETTER_PREFIX = "get";
+  private final static String EXIST_PREFIX = "has";
+  private final static String REMOVE_PREFIX = "remove";
+  final TypeName enclosingClassName;
+  final KeyAnnotatedField annotatedField;
 
-  protected final TypeName enclosingClassName;
-  protected final KeyAnnotatedField annotatedField;
-
-  protected BaseTypeWriter(TypeName enclosingClassName, KeyAnnotatedField annotatedField) {
+  BaseTypeWriter(TypeName enclosingClassName, KeyAnnotatedField annotatedField) {
     this.enclosingClassName = enclosingClassName;
     this.annotatedField = annotatedField;
   }
@@ -73,6 +74,7 @@ public abstract class BaseTypeWriter implements TypeWriter {
     List<MethodSpec> methods = new ArrayList<MethodSpec>() {{
       add(writeSetter(prefs));
       add(writeGetter(prefs));
+      add(writeGetterWithDefaultValue(prefs));
       add(writeExists(prefs));
       add(writeRemover(prefs));
     }};
@@ -85,9 +87,13 @@ public abstract class BaseTypeWriter implements TypeWriter {
     return methods;
   }
 
-  protected MethodSpec.Builder getBaseGetterBuilder() {
-    String methodName = annotatedField.omitGetterPrefix ? annotatedField.name
+  String getGetterMethodName() {
+    return annotatedField.omitGetterPrefix ? annotatedField.name
         : getGetterPrefix() + Utils.lowerToUpperCamel(annotatedField.name);
+  }
+
+  protected MethodSpec.Builder getBaseGetterBuilder() {
+    String methodName = getGetterMethodName();
 
     return MethodSpec.methodBuilder(methodName)
         .addModifiers(Modifier.PUBLIC)
@@ -98,13 +104,13 @@ public abstract class BaseTypeWriter implements TypeWriter {
     return MethodSpec.methodBuilder(SETTER_PREFIX + Utils.lowerToUpperCamel(annotatedField.name))
         .addModifiers(Modifier.PUBLIC)
         .returns(enclosingClassName)
-        .addParameter(parameterClass, "value");
+        .addParameter(parameterClass, PARAM_VALUE);
   }
 
   protected MethodSpec.Builder getBaseSetterWithCommitBuilder(Class<?> parameterClass) {
     return MethodSpec.methodBuilder(SETTER_PREFIX + Utils.lowerToUpperCamel(annotatedField.name) + WITH_COMMIT_SUFFIX)
         .addModifiers(Modifier.PUBLIC)
         .returns(enclosingClassName)
-        .addParameter(parameterClass, "value");
+        .addParameter(parameterClass, PARAM_VALUE);
   }
 }

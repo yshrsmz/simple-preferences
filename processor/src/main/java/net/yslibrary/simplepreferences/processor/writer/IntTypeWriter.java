@@ -22,9 +22,17 @@ public class IntTypeWriter extends BaseTypeWriter {
   }
 
   @Override
+  public MethodSpec writeGetterWithDefaultValue(FieldSpec prefs) {
+    return getBaseGetterBuilder()
+        .addParameter(int.class, PARAM_DEFAULT_VALUE)
+        .addStatement("return $N.getInt($S, $L)", prefs, annotatedField.preferenceKey, PARAM_DEFAULT_VALUE)
+        .build();
+  }
+
+  @Override
   public MethodSpec writeSetter(FieldSpec prefs) {
     return getBaseSetterBuilder(int.class)
-        .addStatement("$N.edit().putInt($S, value).apply()", prefs, annotatedField.preferenceKey)
+        .addStatement("$N.edit().putInt($S, $L).apply()", prefs, annotatedField.preferenceKey, PARAM_VALUE)
         .addStatement("return this")
         .build();
   }
@@ -32,7 +40,7 @@ public class IntTypeWriter extends BaseTypeWriter {
   @Override
   public MethodSpec writeSetterWithCommit(FieldSpec prefs) {
     return getBaseSetterWithCommitBuilder(int.class)
-        .addStatement("$N.edit().putInt($S, value).commit()", prefs, annotatedField.preferenceKey)
+        .addStatement("$N.edit().putInt($S, $L).commit()", prefs, annotatedField.preferenceKey, PARAM_VALUE)
         .addStatement("return this")
         .build();
   }

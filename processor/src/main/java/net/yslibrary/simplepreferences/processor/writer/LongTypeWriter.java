@@ -22,9 +22,17 @@ public class LongTypeWriter extends BaseTypeWriter {
   }
 
   @Override
+  public MethodSpec writeGetterWithDefaultValue(FieldSpec prefs) {
+    return getBaseGetterBuilder()
+        .addParameter(long.class, PARAM_DEFAULT_VALUE)
+        .addStatement("return $N.getLong($S, $L)", prefs, annotatedField.preferenceKey, PARAM_DEFAULT_VALUE)
+        .build();
+  }
+
+  @Override
   public MethodSpec writeSetter(FieldSpec prefs) {
     return getBaseSetterBuilder(long.class)
-        .addStatement("$N.edit().putLong($S, value).apply()", prefs, annotatedField.preferenceKey)
+        .addStatement("$N.edit().putLong($S, $L).apply()", prefs, annotatedField.preferenceKey, PARAM_VALUE)
         .addStatement("return this")
         .build();
   }
@@ -32,7 +40,7 @@ public class LongTypeWriter extends BaseTypeWriter {
   @Override
   public MethodSpec writeSetterWithCommit(FieldSpec prefs) {
     return getBaseSetterWithCommitBuilder(long.class)
-        .addStatement("$N.edit().putLong($S, value).commit()", prefs, annotatedField.preferenceKey)
+        .addStatement("$N.edit().putLong($S, $L).commit()", prefs, annotatedField.preferenceKey, PARAM_VALUE)
         .addStatement("return this")
         .build();
   }

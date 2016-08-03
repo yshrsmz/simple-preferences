@@ -38,13 +38,15 @@ public interface TypeWriter {
 
   MethodSpec writeGetter(FieldSpec prefs);
 
+  MethodSpec writeGetterWithDefaultValue(FieldSpec prefs);
+
   MethodSpec writeSetter(FieldSpec prefs);
+
+  MethodSpec writeSetterWithCommit(FieldSpec prefs);
 
   MethodSpec writeExists(FieldSpec prefs);
 
   MethodSpec writeRemover(FieldSpec prefs);
-
-  MethodSpec writeSetterWithCommit(FieldSpec prefs);
 
   MethodSpec writeRemoverWithCommit(FieldSpec prefs);
 

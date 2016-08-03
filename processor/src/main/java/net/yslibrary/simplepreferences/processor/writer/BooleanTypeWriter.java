@@ -23,9 +23,17 @@ public class BooleanTypeWriter extends BaseTypeWriter {
   }
 
   @Override
+  public MethodSpec writeGetterWithDefaultValue(FieldSpec prefs) {
+    return getBaseGetterBuilder()
+        .addParameter(boolean.class, PARAM_DEFAULT_VALUE)
+        .addStatement("return $N.getBoolean($S, $L)", prefs, annotatedField.preferenceKey, PARAM_DEFAULT_VALUE)
+        .build();
+  }
+
+  @Override
   public MethodSpec writeSetter(FieldSpec prefs) {
     return getBaseSetterBuilder(boolean.class)
-        .addStatement("$N.edit().putBoolean($S, value).apply()", prefs, annotatedField.preferenceKey)
+        .addStatement("$N.edit().putBoolean($S, $L).apply()", prefs, annotatedField.preferenceKey, PARAM_VALUE)
         .addStatement("return this")
         .build();
   }
@@ -33,7 +41,7 @@ public class BooleanTypeWriter extends BaseTypeWriter {
   @Override
   public MethodSpec writeSetterWithCommit(FieldSpec prefs) {
     return getBaseSetterWithCommitBuilder(boolean.class)
-        .addStatement("$N.edit().putBoolean($S, value).commit()", prefs, annotatedField.preferenceKey)
+        .addStatement("$N.edit().putBoolean($S, $L).commit()", prefs, annotatedField.preferenceKey, PARAM_VALUE)
         .addStatement("return this")
         .build();
   }
