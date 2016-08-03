@@ -28,8 +28,8 @@ buildscript {
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-  apt 'net.yslibrary.simplepreferences:simplepreferences-processor:1.2.0'
-  compile 'net.yslibrary.simplepreferences:simplepreferences:1.2.0'
+  apt 'net.yslibrary.simplepreferences:simplepreferences-processor:1.3.0'
+  compile 'net.yslibrary.simplepreferences:simplepreferences:1.3.0'
 }
 ```
 
@@ -144,7 +144,9 @@ public class ConfigPrefs extends Config {
 ```
 
 As you may noticed from generated getter method, the values you set in your POJO become default values for each keys.
+
 Also you can provide custom default value with overloaded method.
+
 
 Generated classes will be placed at the same package as parent classes.
 
@@ -171,6 +173,7 @@ Declare annotated variable as SharedPreferences key.
 | `needCommitMethod` | whether or not create additional setter method which use `SharedPreferences.Editor#commit()` | false (disabled) |
 
 `omitGetterPrefix` is useful when you define boolean value.
+
 `needCommitMethod` is useful when you want to write to the backing file synchronously.
 
 
