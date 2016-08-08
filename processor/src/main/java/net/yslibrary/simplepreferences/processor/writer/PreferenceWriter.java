@@ -46,10 +46,36 @@ public class PreferenceWriter {
     classBuilder.addField(prefsField);
 
     // constructor
+    classBuilder.addMethod(writeConstructor(preferenceName, useDefaultPreferences));
+
+    // create method
+    classBuilder.addMethod(writeFactory(generatingClass));
+
+    // clear method
+    classBuilder.addMethod(writeClear());
+
+    if (annotatedClass.needCommitMethodForClear) {
+      classBuilder.addMethod(writeClearWithCommit());
+    }
+
+    // keys
+    annotatedClass.keys.forEach(keyAnnotatedField -> {
+      List<MethodSpec> methods =
+          TypeWriter.create(generatingClass, keyAnnotatedField).writeMethods(prefsField);
+
+      classBuilder.addMethods(methods);
+    });
+
+    return classBuilder.build();
+  }
+
+
+  private MethodSpec writeConstructor(String preferenceName, boolean useDefaultPreferences) {
     MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PRIVATE)
         .addParameter(
             ParameterSpec.builder(Context.class, "context").addAnnotation(NonNull.class).build());
+
     if (useDefaultPreferences) {
       constructorBuilder.addStatement(
           "prefs = $T.getDefaultSharedPreferences(context.getApplicationContext())",
@@ -59,10 +85,11 @@ public class PreferenceWriter {
           "prefs = context.getApplicationContext().getSharedPreferences($S, Context.MODE_PRIVATE)",
           preferenceName);
     }
-    MethodSpec constructor = constructorBuilder.build();
-    classBuilder.addMethod(constructor);
 
-    // create method ---
+    return constructorBuilder.build();
+  }
+
+  private MethodSpec writeFactory(TypeName generatingClass) {
     MethodSpec.Builder createMethod = MethodSpec.methodBuilder("create")
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         .addParameter(
@@ -74,23 +101,22 @@ public class PreferenceWriter {
         .endControlFlow();
     createMethod.addStatement("return new $T(context)", generatingClass);
 
-    classBuilder.addMethod(createMethod.build());
+    return createMethod.build();
+  }
 
-    // clear method ---
-    MethodSpec.Builder clearMethod =
-        MethodSpec.methodBuilder("clear").addModifiers(Modifier.PUBLIC);
+  private MethodSpec writeClear() {
+    MethodSpec.Builder clearMethod = MethodSpec.methodBuilder("clear")
+        .addModifiers(Modifier.PUBLIC);
     clearMethod.addStatement("prefs.edit().clear().apply()");
 
-    classBuilder.addMethod(clearMethod.build());
+    return clearMethod.build();
+  }
 
-    // keys
-    annotatedClass.keys.forEach(keyAnnotatedField -> {
-      List<MethodSpec> methods =
-          TypeWriter.create(generatingClass, keyAnnotatedField).writeMethods(prefsField);
+  private MethodSpec writeClearWithCommit() {
+    MethodSpec.Builder clearWithCommitMethod = MethodSpec.methodBuilder("clearWithCommit")
+        .addModifiers(Modifier.PUBLIC)
+        .addStatement("prefs.edit().clear().commit()");
 
-      classBuilder.addMethods(methods);
-    });
-
-    return classBuilder.build();
+    return clearWithCommitMethod.build();
   }
 }

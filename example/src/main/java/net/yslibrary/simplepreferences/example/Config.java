@@ -6,7 +6,7 @@ import net.yslibrary.simplepreferences.annotation.Preferences;
 /**
  * Created by yshrsmz on 2016/02/26.
  */
-@Preferences
+@Preferences(needCommitMethodForClear = true)
 public class Config {
 
   @Key

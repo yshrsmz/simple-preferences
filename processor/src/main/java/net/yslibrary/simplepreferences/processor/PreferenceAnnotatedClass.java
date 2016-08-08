@@ -34,12 +34,15 @@ public class PreferenceAnnotatedClass {
 
   public final List<KeyAnnotatedField> keys = new ArrayList<>();
 
+  public final boolean needCommitMethodForClear;
+
   public PreferenceAnnotatedClass(TypeElement element, Elements elementUtils)
       throws IllegalStateException, ProcessingException {
     annotatedElement = element;
     Preferences annotation = annotatedElement.getAnnotation(Preferences.class);
     String value = annotation.value().trim();
     boolean useDefault = annotation.useDefault();
+    needCommitMethodForClear = annotation.needCommitMethodForClear();
     String simpleName = element.getSimpleName().toString();
 
     if (useDefault) {

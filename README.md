@@ -163,6 +163,7 @@ Declare annotated class as SharedPreferences model.
 |---|---|---|
 | `value` | SharedPreferences name | empty (class name is converted to lower_snake_case and used as SharedPreferences name) |
 | `useDefault` | use DefaultSharedPreferences or not | false |
+| `needCommitMethodForClear` | whether or not create additional clear method which uses `SharedPreferences.Editor#commit()` | false |
 
 
 ### `@key`
@@ -177,7 +178,7 @@ Declare annotated variable as SharedPreferences key.
 
 `omitGetterPrefix` is useful when you define boolean value.
 
-`needCommitMethod` is useful when you want to write to the backing file synchronously.
+`needCommitMethodForClear`/`needCommitMethod` is useful when you want to update the backing file synchronously.
 
 
 License

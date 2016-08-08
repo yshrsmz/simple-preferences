@@ -26,4 +26,12 @@ public @interface Preferences {
    * @return
    */
   boolean useDefault() default false;
+
+  /**
+   * whether or not create additional clear method which uses SharedPreferences.Editor#commit().
+   * this is useful when you want to write to the backing file synchronously.
+   *
+   * @return true if you need synchronous method
+   */
+  boolean needCommitMethodForClear() default false;
 }
