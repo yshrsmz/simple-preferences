@@ -28,7 +28,7 @@ public @interface Key {
   boolean omitGetterPrefix() default false;
 
   /**
-   * whether or not create additional setter method which use SharedPreferences.Editor#commit().
+   * whether or not create additional setter/remover methods which use SharedPreferences.Editor#commit().
    * this is useful when you want to write to the backing file synchronously.
    *
    * @return true if you want synchronous method
