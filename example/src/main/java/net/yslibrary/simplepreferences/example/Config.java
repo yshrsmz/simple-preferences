@@ -12,7 +12,7 @@ public class Config {
   @Key
   protected int userId = 0;
 
-  @Key
+  @Key(getterType = Key.GetterType.GETTER_AND_OBSERVABLE)
   protected String userName = "";
 
   @Key(omitGetterPrefix = true)

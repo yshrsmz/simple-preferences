@@ -30,6 +30,8 @@ dependencies {
   compile project(':library')
   apt project(':processor')
 
+  compile deps.rxJava
+
   testCompile deps.junit
   compile deps.supportv4
   compile deps.appcompat
