@@ -2,7 +2,7 @@ Simple Preferences
 ===
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Simple%20Preferences-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3233)
-[![Bintray](https://img.shields.io/bintray/v/yshrsmz/maven/simplepreferences.svg)](https://bintray.com/yshrsmz/maven/licenseadapter/view)
+[![Bintray](https://img.shields.io/bintray/v/yshrsmz/maven/simplepreferences.svg)](https://bintray.com/yshrsmz/maven/simplepreferences/view)
 
 Simple Preference is a SharedPreference Manager generator.
 
@@ -17,8 +17,7 @@ Currently the library supports `get`/`set`/`has`/`remove` operation for each key
 ## Installation
 
 This library requires JDK8 to run annotation processor.
-
-You can check the latest version number from the badge above.
+current version is [![Bintray](https://img.shields.io/bintray/v/yshrsmz/maven/simplepreferences.svg)](https://bintray.com/yshrsmz/maven/simplepreferences/view).
 
 ```groovy
 // distributed via jCenter
