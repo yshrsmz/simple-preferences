@@ -27,6 +27,7 @@ dependencies {
   compile deps.javapoet
   compile deps.android
   compile deps.supportAnnotations
+  compile deps.rxJava
 
   testCompile deps.junit
   testCompile deps.truth

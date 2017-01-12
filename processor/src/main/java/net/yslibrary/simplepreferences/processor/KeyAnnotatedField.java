@@ -20,6 +20,8 @@ public class KeyAnnotatedField {
   public final String preferenceKey;
   public final boolean omitGetterPrefix;
   public final boolean needCommitMethod;
+  public final boolean needGetterMethod;
+  public final boolean needObservableMethod;
 
   public KeyAnnotatedField(VariableElement element) throws ProcessingException {
     if (element.getModifiers().contains(Modifier.PRIVATE)) {
@@ -36,5 +38,7 @@ public class KeyAnnotatedField {
         : annotation.name();
     omitGetterPrefix = annotation.omitGetterPrefix();
     needCommitMethod = annotation.needCommitMethod();
+    needGetterMethod = annotation.getterType() == Key.GetterType.GETTER || annotation.getterType() == Key.GetterType.GETTER_AND_OBSERVABLE;
+    needObservableMethod = annotation.getterType() == Key.GetterType.OBSERVABLE || annotation.getterType() == Key.GetterType.GETTER_AND_OBSERVABLE;
   }
 }

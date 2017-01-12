@@ -30,6 +30,8 @@ ext {
           appcompat         : 'com.android.support:appcompat-v7:23.2.1',
           supportAnnotations: 'com.android.support:support-annotations:23.2.1',
 
+          rxJava            : 'io.reactivex:rxjava:1.2.1',
+
           // Square
           javapoet          : 'com.squareup:javapoet:1.7.0',
 

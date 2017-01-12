@@ -34,4 +34,27 @@ public @interface Key {
    * @return true if you want synchronous method
    */
   boolean needCommitMethod() default false;
+
+  /**
+   * specify getters you need
+   *
+   * <dl>
+   *   <dt>{@link net.yslibrary.simplepreferences.annotation.Key.GetterType#GETTER}</dt>
+   *   <dd>generate simple getter. this is default behavior.</dd>
+   *   <dt>{@link net.yslibrary.simplepreferences.annotation.Key.GetterType#OBSERVABLE}</dt>
+   *   <dd>generate method which returns rx.Observable. this observable will be notified on value change. this method is suffixed as `asObservable`</dd>
+   *   <dt>{@link net.yslibrary.simplepreferences.annotation.Key.GetterType#GETTER_AND_OBSERVABLE}</dt>
+   *   <dd>generate both of above method</dd>
+   * </dl>
+   *
+   * @return
+   */
+  GetterType getterType() default GetterType.GETTER;
+
+
+  enum GetterType {
+    GETTER,
+    OBSERVABLE,
+    GETTER_AND_OBSERVABLE
+  }
 }
