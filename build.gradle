@@ -2,23 +2,38 @@
 apply from: "${project.rootDir}/gradle/version/version.gradle"
 apply from: "${project.rootDir}/metadata.gradle"
 
+final ANDROID_SDK_PATH = {
+  final localProperties = new Properties()
+  try {
+    localProperties.load(new FileInputStream("${project.rootProject.projectDir}/local.properties"))
+  } catch (IOException e) { /* ignore errors */
+  }
+  def androidSdkPath = localProperties['sdk.dir'] ?: System.getenv('ANDROID_HOME')
+  if (!androidSdkPath) {
+    throw new RuntimeException("Missing local.properties")
+  }
+  androidSdkPath
+}()
+final ANDROID_SUPPORT_REPOSITORY = "${ANDROID_SDK_PATH}/extras/android/m2repository"
+
+
 buildscript {
   repositories {
     jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.1.2'
+    classpath 'com.android.tools.build:gradle:2.3.0'
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
 
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
-    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     classpath 'com.novoda:bintray-release:0.3.4' // https://github.com/novoda/bintray-release
   }
 }
 
 allprojects {
   repositories {
+    maven { url ANDROID_SUPPORT_REPOSITORY }
     jcenter()
   }
 }
@@ -26,21 +41,23 @@ allprojects {
 ext {
   deps = [// Android
           android           : 'com.google.android:android:4.1.1.4',
-          supportv4         : 'com.android.support:support-v4:23.2.1',
-          appcompat         : 'com.android.support:appcompat-v7:23.2.1',
-          supportAnnotations: 'com.android.support:support-annotations:23.2.1',
+          supportv4         : 'com.android.support:support-v4:25.2.0',
+          appcompat         : 'com.android.support:appcompat-v7:25.2.0',
+          supportAnnotations: 'com.android.support:support-annotations:25.2.0',
 
           // Square
           javapoet          : 'com.squareup:javapoet:1.7.0',
 
           // Test dependencies
           junit             : 'junit:junit:4.12',
-          truth             : 'com.google.truth:truth:0.30',
+          truth             : 'com.google.truth:truth:0.32',
           robolectric       : 'org.robolectric:robolectric:3.1.2',
-          compiletesting    : 'com.google.testing.compile:compile-testing:0.9',
-          autoservice       : 'com.google.auto.service:auto-service:1.0-rc2',
-          autocommon        : 'com.google.auto:auto-common:0.6',
-          commonsio         : 'commons-io:commons-io:2.4']
+          compiletesting    : 'com.google.testing.compile:compile-testing:0.10',
+          autoservice       : 'com.google.auto.service:auto-service:1.0-rc3',
+          autocommon        : 'com.google.auto:auto-common:0.8',
+          commonsio         : 'commons-io:commons-io:2.5']
+
+  ANDROID_JAR = fileTree(dir: "${ANDROID_SDK_PATH}/platforms/android-25/", include: 'android.jar')
 
   metadata.version = ext.versionName()
 }
@@ -62,18 +79,20 @@ String shell(String command) {
   return proc.in.text;
 }
 
-task releng << {
-  def tag = "v" + versionName()
-  println "Release engineering for ${tag}"
+task releng {
+  doLast {
+    def tag = "v" + versionName()
+    println "Release engineering for ${tag}"
 
-  def changes = shell "git status -s"
-  if (changes.trim()) {
-    throw new RuntimeException("There are changes not commited yet.\n${changes}")
+    def changes = shell "git status -s"
+    if (changes.trim()) {
+      throw new RuntimeException("There are changes not commited yet.\n${changes}")
+    }
+
+    println "> git tag ${tag}"
+    shell "git tag ${tag}"
+    println "> git push origin ${tag}"
+    shell "git push origin ${tag}"
+    shell "git push origin master"
   }
-
-  println "> git tag ${tag}"
-  shell "git tag ${tag}"
-  println "> git push origin ${tag}"
-  shell "git push origin ${tag}"
-  shell "git push origin master"
 }
