@@ -163,6 +163,7 @@ Declare annotated class as SharedPreferences model.
 | `value` | SharedPreferences name | empty (class name is converted to lower_snake_case and used as SharedPreferences name) |
 | `useDefault` | use DefaultSharedPreferences or not | false |
 | `needCommitMethodForClear` | whether or not create additional clear method which uses `SharedPreferences.Editor#commit()` | false |
+| `expose` | whether to make generated classes public or not | true |
 
 
 ### `@key`

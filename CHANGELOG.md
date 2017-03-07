@@ -1,3 +1,11 @@
+## 1.4.0 - 2017/03/07
+
+### Enhancement
+
+- Add `Preferenecs.expose` option to control visibility of the generated class([issue #10](https://github.com/yshrsmz/simple-preferences/issues/10)). 
+  The default value is `true` for backward compatibility. If you want a generated class to be package private, you need to manually set to `true`.
+
+
 ## 1.3.1 - 2016/08/08
 
 ### Enhancement
