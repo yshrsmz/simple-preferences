@@ -34,8 +34,11 @@ public class PreferenceWriter {
     TypeElement annotatedElement = annotatedClass.annotatedElement;
 
     TypeSpec.Builder classBuilder = TypeSpec.classBuilder(preferenceClassName)
-        .addModifiers(Modifier.PUBLIC)
         .superclass(ClassName.get(annotatedElement));
+
+    if (annotatedClass.shouldBeExposed) {
+      classBuilder.addModifiers(Modifier.PUBLIC);
+    }
 
     TypeName generatingClass = ClassName.get(packageName, preferenceClassName);
 

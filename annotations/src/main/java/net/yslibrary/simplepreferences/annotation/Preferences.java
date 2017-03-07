@@ -34,4 +34,12 @@ public @interface Preferences {
    * @return true if you need synchronous method
    */
   boolean needCommitMethodForClear() default false;
+
+
+  /**
+   * whether to make generated classes public or not
+   *
+   * @return true if generated class should be public. If false, the class will be package private.
+   */
+  boolean expose() default true;
 }

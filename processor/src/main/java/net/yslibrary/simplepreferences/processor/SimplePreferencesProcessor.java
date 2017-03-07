@@ -115,8 +115,8 @@ public class SimplePreferencesProcessor extends AbstractProcessor {
   private void checkValid(PreferenceAnnotatedClass item) throws ProcessingException {
     TypeElement element = item.annotatedElement;
 
-    if (!element.getModifiers().contains(Modifier.PUBLIC)) {
-      throw new ProcessingException(element, "The class %s is not public",
+    if (element.getModifiers().contains(Modifier.PRIVATE)) {
+      throw new ProcessingException(element, "The class %s is private",
           element.getQualifiedName().toString());
     }
 

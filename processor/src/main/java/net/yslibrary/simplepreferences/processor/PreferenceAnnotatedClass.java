@@ -36,6 +36,8 @@ public class PreferenceAnnotatedClass {
 
   public final boolean needCommitMethodForClear;
 
+  public final boolean shouldBeExposed;
+
   public PreferenceAnnotatedClass(TypeElement element, Elements elementUtils)
       throws IllegalStateException, ProcessingException {
     annotatedElement = element;
@@ -43,6 +45,8 @@ public class PreferenceAnnotatedClass {
     String value = annotation.value().trim();
     boolean useDefault = annotation.useDefault();
     needCommitMethodForClear = annotation.needCommitMethodForClear();
+    shouldBeExposed = annotation.expose();
+
     String simpleName = element.getSimpleName().toString();
 
     if (useDefault) {
