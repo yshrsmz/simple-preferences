@@ -21,16 +21,9 @@ current version is [![Bintray](https://img.shields.io/bintray/v/yshrsmz/maven/si
 
 ```groovy
 // distributed via jCenter
-buildscript {
-  dependencies {
-    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-  }
-}
-
-apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-  apt 'net.yslibrary.simplepreferences:simplepreferences-processor:LATEST_LIBRARY_VERSION'
+  annotationProcessor 'net.yslibrary.simplepreferences:simplepreferences-processor:LATEST_LIBRARY_VERSION'
   compile 'net.yslibrary.simplepreferences:simplepreferences:LATEST_LIBRARY_VERSION'
 }
 ```
