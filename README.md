@@ -16,7 +16,7 @@ Currently the library supports `get`/`set`/`has`/`remove` operation for each key
 
 ## Installation
 
-SimplePreferences is distributed via jCenter. Current version is [![Bintray](https://img.shields.io/bintray/v/yshrsmz/maven/simplepreferences.svg)](https://bintray.com/yshrsmz/maven/simplepreferences/view).
+SimplePreferences is distributed via jCenter. [![Bintray](https://img.shields.io/bintray/v/yshrsmz/maven/simplepreferences.svg)](https://bintray.com/yshrsmz/maven/simplepreferences/view).  
 This library requires JDK8 to run annotation processor.
 
 ```groovy
