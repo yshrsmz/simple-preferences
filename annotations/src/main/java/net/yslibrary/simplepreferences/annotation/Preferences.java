@@ -28,6 +28,15 @@ public @interface Preferences {
   boolean useDefault() default false;
 
   /**
+   * The prefix for the names in the string resource.
+   *
+   * Example: enableNotifications() will result in pref_enable_notifications.
+   *
+   * @return
+   */
+  String resourcePrefix() default "pref_";
+
+  /**
    * whether or not create additional clear method which uses SharedPreferences.Editor#commit().
    * this is useful when you want to write to the backing file synchronously.
    *
