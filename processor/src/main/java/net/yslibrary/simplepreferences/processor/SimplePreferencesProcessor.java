@@ -3,18 +3,12 @@ package net.yslibrary.simplepreferences.processor;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Filer;
-import javax.annotation.processing.Messager;
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.Processor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
+import net.yslibrary.simplepreferences.annotation.Preferences;
+import net.yslibrary.simplepreferences.processor.exception.ProcessingException;
+import net.yslibrary.simplepreferences.processor.writer.PreferenceResourceWriter;
+import net.yslibrary.simplepreferences.processor.writer.PreferenceWriter;
+
+import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
@@ -22,9 +16,20 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
-import net.yslibrary.simplepreferences.annotation.Preferences;
-import net.yslibrary.simplepreferences.processor.exception.ProcessingException;
-import net.yslibrary.simplepreferences.processor.writer.PreferenceWriter;
+import javax.tools.FileObject;
+import javax.tools.StandardLocation;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({
@@ -38,6 +43,7 @@ public class SimplePreferencesProcessor extends AbstractProcessor {
   private Types typeUtils;
   private Filer filer;
   private Messager messager;
+  private Path resourcePath;
 
   private Map<String, PreferenceAnnotatedClass> items = new LinkedHashMap<>();
 
@@ -49,6 +55,11 @@ public class SimplePreferencesProcessor extends AbstractProcessor {
     typeUtils = processingEnv.getTypeUtils();
     filer = processingEnv.getFiler();
     messager = processingEnv.getMessager();
+    try {
+      resourcePath = getResPath();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -99,9 +110,36 @@ public class SimplePreferencesProcessor extends AbstractProcessor {
       }
     });
 
+    //Make xml
+    List<PreferenceAnnotatedClass> classes = items.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
+    try {
+      PreferenceResourceWriter writer = new PreferenceResourceWriter(classes);
+      writer.write();
+      writeXml(writer);
+    } catch (ParserConfigurationException | TransformerException | IOException e) {
+      error(null, e.getMessage());
+    }
+
     items.clear();
 
     return true;
+  }
+
+  private void writeXml(PreferenceResourceWriter xml) throws IOException, TransformerException, ParserConfigurationException {
+
+    String fileName = "simple_preferences.xml";
+
+    if (!Files.exists(resourcePath)) {
+      Files.createDirectories(resourcePath);
+    }
+
+    File resource = new File(resourcePath.toFile(), fileName);
+
+    if (!resource.exists()) {
+      resource.createNewFile();
+    }
+
+    xml.toFile(resource);
   }
 
   private void error(Element e, String msg, Object... args) {
@@ -124,5 +162,31 @@ public class SimplePreferencesProcessor extends AbstractProcessor {
       throw new ProcessingException(element, "The class %s is define as final",
           element.getQualifiedName().toString());
     }
+  }
+
+  /**
+   * Get the path where the string resources should go.
+   *
+   * @return The path.
+   *
+   * @throws IOException An error.
+   */
+  private Path getResPath() throws IOException {
+    FileObject dummy = filer.createResource(StandardLocation.SOURCE_OUTPUT,"","dummy");
+
+    Path parent = Paths.get(dummy.toUri()).getParent();
+
+    String variant = parent.getFileName().toString();
+
+    // Find index of the generated folder
+    Path basePath = Paths.get(parent.toUri());
+    while(!basePath.endsWith("generated")) {
+      basePath = basePath.getParent();
+    }
+
+    System.out.println("PATH: variant: " + variant);
+    System.out.println("PATH: base: " + basePath);
+
+    return Paths.get(basePath.toString(), "res", "resValues", variant, "values");
   }
 }

@@ -38,6 +38,8 @@ public class PreferenceAnnotatedClass {
 
   public final boolean shouldBeExposed;
 
+  public final String resourcePrefix;
+
   public PreferenceAnnotatedClass(TypeElement element, Elements elementUtils)
       throws IllegalStateException, ProcessingException {
     annotatedElement = element;
@@ -46,6 +48,7 @@ public class PreferenceAnnotatedClass {
     boolean useDefault = annotation.useDefault();
     needCommitMethodForClear = annotation.needCommitMethodForClear();
     shouldBeExposed = annotation.expose();
+    resourcePrefix = annotation.resourcePrefix();
 
     String simpleName = element.getSimpleName().toString();
 
