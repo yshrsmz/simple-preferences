@@ -1,17 +1,22 @@
 package net.yslibrary.simplepreferences.processor;
 
 import com.google.common.base.Strings;
+
+import net.yslibrary.simplepreferences.annotation.Key;
+import net.yslibrary.simplepreferences.annotation.Preferences;
+import net.yslibrary.simplepreferences.processor.exception.ProcessingException;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
-import net.yslibrary.simplepreferences.annotation.Key;
-import net.yslibrary.simplepreferences.annotation.Preferences;
-import net.yslibrary.simplepreferences.processor.exception.ProcessingException;
 
 /**
  * Created by yshrsmz on 2016/02/21.
@@ -38,6 +43,8 @@ public class PreferenceAnnotatedClass {
 
   public final boolean shouldBeExposed;
 
+  public final Set<Modifier> modifiers;
+
   public PreferenceAnnotatedClass(TypeElement element, Elements elementUtils)
       throws IllegalStateException, ProcessingException {
     annotatedElement = element;
@@ -48,6 +55,7 @@ public class PreferenceAnnotatedClass {
     shouldBeExposed = annotation.expose();
 
     String simpleName = element.getSimpleName().toString();
+    modifiers = element.getModifiers();
 
     if (useDefault) {
       preferenceName = DEFAULT_PREFS;
