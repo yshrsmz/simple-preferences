@@ -4,16 +4,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+
+import net.yslibrary.simplepreferences.processor.PreferenceAnnotatedClass;
+
 import java.util.List;
+
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import net.yslibrary.simplepreferences.processor.PreferenceAnnotatedClass;
 
 /**
  * Created by yshrsmz on 2016/02/23.
@@ -28,6 +32,7 @@ public class PreferenceWriter {
 
   public TypeSpec write() {
     boolean useDefaultPreferences = annotatedClass.useDefaultPreferences();
+    boolean isAbstractClass = annotatedClass.modifiers.contains(Modifier.ABSTRACT);
     String preferenceName = annotatedClass.preferenceName;
     String preferenceClassName = annotatedClass.preferenceClassName;
     String packageName = annotatedClass.packageName;
@@ -35,6 +40,10 @@ public class PreferenceWriter {
 
     TypeSpec.Builder classBuilder = TypeSpec.classBuilder(preferenceClassName)
         .superclass(ClassName.get(annotatedElement));
+
+    if (isAbstractClass) {
+      classBuilder.addModifiers(Modifier.ABSTRACT);
+    }
 
     if (annotatedClass.shouldBeExposed) {
       classBuilder.addModifiers(Modifier.PUBLIC);
@@ -49,10 +58,10 @@ public class PreferenceWriter {
     classBuilder.addField(prefsField);
 
     // constructor
-    classBuilder.addMethod(writeConstructor(preferenceName, useDefaultPreferences));
+    classBuilder.addMethod(writeConstructor(preferenceName, useDefaultPreferences, isAbstractClass));
 
     // create method
-    classBuilder.addMethod(writeFactory(generatingClass));
+    classBuilder.addMethod(writeFactory(generatingClass, isAbstractClass));
 
     // clear method
     classBuilder.addMethod(writeClear());
@@ -73,9 +82,10 @@ public class PreferenceWriter {
   }
 
 
-  private MethodSpec writeConstructor(String preferenceName, boolean useDefaultPreferences) {
+  private MethodSpec writeConstructor(String preferenceName, boolean useDefaultPreferences,
+                                      boolean isAbstractClass) {
     MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder()
-        .addModifiers(Modifier.PRIVATE)
+        .addModifiers(isAbstractClass ? Modifier.PROTECTED : Modifier.PRIVATE)
         .addParameter(
             ParameterSpec.builder(Context.class, "context").addAnnotation(NonNull.class).build());
 
@@ -92,17 +102,19 @@ public class PreferenceWriter {
     return constructorBuilder.build();
   }
 
-  private MethodSpec writeFactory(TypeName generatingClass) {
+  private MethodSpec writeFactory(TypeName generatingClass, boolean isAbstractClass) {
     MethodSpec.Builder createMethod = MethodSpec.methodBuilder("create")
-        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+        .addModifiers(Modifier.PUBLIC, isAbstractClass ? Modifier.ABSTRACT : Modifier.STATIC)
         .addParameter(
             ParameterSpec.builder(Context.class, "context").addAnnotation(NonNull.class).build())
         .returns(generatingClass);
 
-    createMethod.beginControlFlow("if (context == null)")
-        .addStatement("throw new NullPointerException($S)", "Context is Null!")
-        .endControlFlow();
-    createMethod.addStatement("return new $T(context)", generatingClass);
+    if (!isAbstractClass) {
+      createMethod.beginControlFlow("if (context == null)")
+          .addStatement("throw new NullPointerException($S)", "Context is Null!")
+          .endControlFlow();
+      createMethod.addStatement("return new $T(context)", generatingClass);
+    }
 
     return createMethod.build();
   }
