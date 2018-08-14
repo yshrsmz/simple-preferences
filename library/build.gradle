@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'com.novoda.bintray-release'
+apply plugin: "guru.stefma.bintrayrelease"
 
 android {
   compileSdkVersion 28
@@ -38,14 +39,15 @@ dependencies {
   testImplementation deps.junit
 }
 
+group = project.rootProject.ext.metadata.groupId.toString()
+version = project.rootProject.ext.metadata.version.toString()
+
 publish {
   artifactId = 'simplepreferences'
   desc = 'Simple SharedPreferences for Android'
 
   def metadata = project.rootProject.ext.metadata
   userOrg metadata.userOrg
-  groupId metadata.groupId
-  publishVersion metadata.version
   website metadata.website
   repository metadata.repository
   licences metadata.licences

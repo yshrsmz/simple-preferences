@@ -30,7 +30,8 @@ buildscript {
     // in the individual module build.gradle files
 
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
-    classpath 'com.novoda:bintray-release:0.8.1' // https://github.com/novoda/bintray-release
+    //classpath 'com.novoda:bintray-release:0.8.1' // https://github.com/novoda/bintray-release
+    classpath "guru.stefma.bintrayrelease:bintrayrelease:1.0.0"
   }
 }
 
