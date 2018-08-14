@@ -11,7 +11,7 @@ publish {
   desc = 'Annotations for SimplePreferences'
 
   def metadata = project.rootProject.ext.metadata
-    userOrg metadata.userOrg
+  userOrg metadata.userOrg
   groupId metadata.groupId
   publishVersion metadata.version
   website metadata.website
