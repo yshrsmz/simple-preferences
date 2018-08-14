@@ -2,13 +2,10 @@ package net.yslibrary.simplepreferences.processor.writer;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 
 import net.yslibrary.simplepreferences.processor.KeyAnnotatedField;
 import net.yslibrary.simplepreferences.processor.Utils;
-
-import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 

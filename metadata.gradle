@@ -1,6 +1,10 @@
 ext {
-  metadata = [groupId   : 'net.yslibrary.simplepreferences',
-              website   : 'https://github.com/yshrsmz/simple-preferences',
-              repository: 'git@github.com:yshrsmz/simple-preferences.git',
-              licences  : ['Apache-2.0']]
+  metadata = [
+      userOrg   : 'yshrsmz',
+      groupId   : 'net.yslibrary.simplepreferences',
+
+      website   : 'https://github.com/yshrsmz/simple-preferences',
+      repository: 'git@github.com:yshrsmz/simple-preferences.git',
+      licences  : 'Apache-2.0'
+  ]
 }

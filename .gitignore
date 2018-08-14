@@ -32,6 +32,7 @@ proguard/
 # Android Studio files
 .idea/*
 !.idea/codeStyleSettings.xml
+!.idea/codeStyles/*
 *.iml
 
 secret.properties

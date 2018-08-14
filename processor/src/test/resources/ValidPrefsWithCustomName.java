@@ -1,9 +1,10 @@
 package net.yslibrary.simplepreferences;
 
-import java.util.HashSet;
-import java.util.Set;
 import net.yslibrary.simplepreferences.annotation.Key;
 import net.yslibrary.simplepreferences.annotation.Preferences;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by yshrsmz on 2016/02/24.

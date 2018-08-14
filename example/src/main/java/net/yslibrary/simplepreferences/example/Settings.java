@@ -1,8 +1,9 @@
 package net.yslibrary.simplepreferences.example;
 
-import java.util.Set;
 import net.yslibrary.simplepreferences.annotation.Key;
 import net.yslibrary.simplepreferences.annotation.Preferences;
+
+import java.util.Set;
 
 /**
  * Created by yshrsmz on 2016/02/22.
