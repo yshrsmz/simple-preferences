@@ -2,6 +2,8 @@
 apply from: "${project.rootDir}/gradle/version/version.gradle"
 apply from: "${project.rootDir}/metadata.gradle"
 
+apply plugin: 'com.github.ben-manes.versions'
+
 final ANDROID_SDK_PATH = {
   final localProperties = new Properties()
   try {
@@ -19,21 +21,22 @@ final ANDROID_SUPPORT_REPOSITORY = "${ANDROID_SDK_PATH}/extras/android/m2reposit
 
 buildscript {
   repositories {
+    google()
     jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.3.0'
+    classpath 'com.android.tools.build:gradle:3.2.0-beta05'
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
 
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
-    classpath 'com.novoda:bintray-release:0.3.4' // https://github.com/novoda/bintray-release
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
+    classpath 'com.novoda:bintray-release:0.8.1' // https://github.com/novoda/bintray-release
   }
 }
 
 allprojects {
   repositories {
-    maven { url ANDROID_SUPPORT_REPOSITORY }
+    google()
     jcenter()
   }
 }
@@ -41,9 +44,8 @@ allprojects {
 ext {
   deps = [// Android
           android           : 'com.google.android:android:4.1.1.4',
-          supportv4         : 'com.android.support:support-v4:25.2.0',
-          appcompat         : 'com.android.support:appcompat-v7:25.2.0',
-          supportAnnotations: 'com.android.support:support-annotations:25.2.0',
+          appcompat         : 'androidx.appcompat:appcompat:1.0.0-rc01',
+          androidxAnnotations: 'androidx.annotation:annotation:1.0.0-rc01',
 
           // Square
           javapoet          : 'com.squareup:javapoet:1.7.0',
@@ -95,4 +97,10 @@ task releng {
     shell "git push origin ${tag}"
     shell "git push origin master"
   }
+}
+
+wrapper {
+  gradleVersion = '4.4.1'
+  //noinspection UnnecessaryQualifiedReference
+  distributionType = Wrapper.DistributionType.ALL
 }

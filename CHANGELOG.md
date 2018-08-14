@@ -1,3 +1,14 @@
+## 2.0.0 - 2018/08/XX
+
+### Breaking Changes
+
+- Migrate to AndroidX. If you need to use legacy Android Support Libraries, use v1.4.0
+
+### Enhancements
+
+- Update to SDK 28
+
+
 ## 1.4.0 - 2017/03/07
 
 ### Enhancement

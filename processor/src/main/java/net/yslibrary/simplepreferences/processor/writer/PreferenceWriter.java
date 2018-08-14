@@ -3,17 +3,21 @@ package net.yslibrary.simplepreferences.processor.writer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+
+import net.yslibrary.simplepreferences.processor.PreferenceAnnotatedClass;
+
 import java.util.List;
+
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import net.yslibrary.simplepreferences.processor.PreferenceAnnotatedClass;
 
 /**
  * Created by yshrsmz on 2016/02/23.

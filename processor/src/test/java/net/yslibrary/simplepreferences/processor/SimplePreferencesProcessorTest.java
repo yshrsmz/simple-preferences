@@ -1,10 +1,13 @@
 package net.yslibrary.simplepreferences.processor;
 
 import com.google.testing.compile.JavaFileObjects;
-import java.util.Arrays;
-import javax.tools.JavaFileObject;
+
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.Arrays;
+
+import javax.tools.JavaFileObject;
 
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;

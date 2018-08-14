@@ -1,6 +1,5 @@
 apply plugin: 'java'
 apply plugin: 'com.novoda.bintray-release'
-apply plugin: 'com.github.ben-manes.versions'
 
 targetCompatibility = JavaVersion.VERSION_1_8
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -13,20 +12,20 @@ processTestResources.dependsOn copyTestResources
 
 dependencies {
 
-  compile project(':annotations')
-  compile deps.autoservice
-  compile deps.autocommon
-  compile deps.javapoet
-  compile deps.android
-  compile deps.supportAnnotations
+  implementation project(':annotations')
+  implementation deps.autoservice
+  implementation deps.autocommon
+  implementation deps.javapoet
+  implementation deps.android
+  implementation deps.androidxAnnotations
 
-  testCompile deps.junit
-  testCompile deps.truth
-  testCompile deps.compiletesting
-  testCompile deps.commonsio
-  testCompile deps.android
-  testCompile deps.supportAnnotations
-  testCompile project.rootProject.ext.ANDROID_JAR
+  testImplementation deps.junit
+  testImplementation deps.truth
+  testImplementation deps.compiletesting
+  testImplementation deps.commonsio
+  testImplementation deps.android
+  testImplementation deps.androidxAnnotations
+  testImplementation project.rootProject.ext.ANDROID_JAR
 }
 
 publish {
@@ -34,9 +33,10 @@ publish {
   desc = 'An annotation processor for SimplePreferences'
 
   def metadata = project.rootProject.ext.metadata
-  groupId = metadata.groupId
-  publishVersion = metadata.version
-  website = metadata.website
-  repository = metadata.repository
-  licences = metadata.licences
+  userOrg metadata.userOrg
+  groupId metadata.groupId
+  publishVersion metadata.version
+  website metadata.website
+  repository metadata.repository
+  licences metadata.licences
 }
