@@ -48,16 +48,17 @@ ext {
           androidxAnnotations: 'androidx.annotation:annotation:1.0.0-rc01',
 
           // Square
-          javapoet          : 'com.squareup:javapoet:1.7.0',
+          javapoet          : 'com.squareup:javapoet:1.11.1',
 
           // Test dependencies
           junit             : 'junit:junit:4.12',
-          truth             : 'com.google.truth:truth:0.32',
+          truth             : 'com.google.truth:truth:0.42',
           robolectric       : 'org.robolectric:robolectric:3.1.2',
-          compiletesting    : 'com.google.testing.compile:compile-testing:0.10',
-          autoservice       : 'com.google.auto.service:auto-service:1.0-rc3',
-          autocommon        : 'com.google.auto:auto-common:0.8',
-          commonsio         : 'commons-io:commons-io:2.5']
+          compiletesting    : 'com.google.testing.compile:compile-testing:0.15',
+          autoservice       : 'com.google.auto.service:auto-service:1.0-rc4',
+          autocommon        : 'com.google.auto:auto-common:0.10',
+          commonsio         : 'commons-io:commons-io:2.6'
+  ]
 
   ANDROID_JAR = fileTree(dir: "${ANDROID_SDK_PATH}/platforms/android-25/", include: 'android.jar')
 
