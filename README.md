@@ -19,6 +19,8 @@ Currently the library supports `get`/`set`/`has`/`remove` operation for each key
 SimplePreferences is distributed via jCenter. [![Bintray](https://img.shields.io/bintray/v/yshrsmz/maven/simplepreferences.svg)](https://bintray.com/yshrsmz/maven/simplepreferences/view).  
 This library requires JDK8 to run annotation processor.
 
+Please note, v2.0.0 only supports AndroidX. If you need to use legacy Android Support libraries, use v1.4.0
+
 ```groovy
 dependencies {
   annotationProcessor 'net.yslibrary.simplepreferences:simplepreferences-processor:LATEST_LIBRARY_VERSION'
@@ -175,7 +177,7 @@ Declare annotated variable as SharedPreferences key.
 License
 -------
 
-    Copyright 2016-2017 Shimizu Yasuhiro (yshrsmz)
+    Copyright 2016-2018 Shimizu Yasuhiro (yshrsmz)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
