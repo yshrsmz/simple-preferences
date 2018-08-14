@@ -17,14 +17,14 @@ dependencies {
   implementation deps.autocommon
   implementation deps.javapoet
   implementation deps.android
-  implementation deps.supportAnnotations
+  implementation deps.androidxAnnotations
 
   testImplementation deps.junit
   testImplementation deps.truth
   testImplementation deps.compiletesting
   testImplementation deps.commonsio
   testImplementation deps.android
-  testImplementation deps.supportAnnotations
+  testImplementation deps.androidxAnnotations
   testImplementation project.rootProject.ext.ANDROID_JAR
 }
 

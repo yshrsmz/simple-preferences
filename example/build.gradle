@@ -28,6 +28,5 @@ dependencies {
   annotationProcessor project(':processor')
 
   testImplementation deps.junit
-  implementation deps.supportv4
   implementation deps.appcompat
 }

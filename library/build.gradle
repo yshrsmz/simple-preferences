@@ -10,7 +10,7 @@ android {
     versionCode 1
     versionName rootProject.ext.metadata.version
 
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   buildTypes {
@@ -32,8 +32,8 @@ android {
 }
 
 dependencies {
-  implementation project(':annotations')
-  implementation deps.supportAnnotations
+  api project(':annotations')
+  implementation deps.androidxAnnotations
 
   testImplementation deps.junit
 }

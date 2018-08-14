@@ -3,7 +3,7 @@ package net.yslibrary.simplepreferences.processor.writer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
