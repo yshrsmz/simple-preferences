@@ -24,7 +24,7 @@ Please note, v2.0.0 only supports AndroidX. If you need to use legacy Android Su
 ```groovy
 dependencies {
   annotationProcessor 'net.yslibrary.simplepreferences:simplepreferences-processor:LATEST_LIBRARY_VERSION'
-  compile 'net.yslibrary.simplepreferences:simplepreferences:LATEST_LIBRARY_VERSION'
+  implementation 'net.yslibrary.simplepreferences:simplepreferences:LATEST_LIBRARY_VERSION'
 }
 ```
 

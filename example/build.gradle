@@ -26,6 +26,9 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   implementation project(':library')
   annotationProcessor project(':processor')
+  // for test
+//  annotationProcessor "net.yslibrary.simplepreferences:simplepreferences-processor:$VERSION"
+//  implementation "net.yslibrary.simplepreferences:simplepreferences:$VERSION"
 
   testImplementation deps.junit
   implementation deps.appcompat
