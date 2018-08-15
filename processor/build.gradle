@@ -1,6 +1,6 @@
 apply plugin: 'java-library'
-//apply plugin: 'com.novoda.bintray-release'
-apply plugin: "guru.stefma.bintrayrelease"
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 targetCompatibility = JavaVersion.VERSION_1_8
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -29,16 +29,58 @@ dependencies {
   testImplementation project.rootProject.ext.ANDROID_JAR
 }
 
-group = project.rootProject.ext.metadata.groupId.toString()
-version = project.rootProject.ext.metadata.version.toString()
+group = GROUP_ID
+version = VERSION
 
-publish {
-  artifactId = 'simplepreferences-processor'
-  desc = 'An annotation processor for SimplePreferences'
-
-  def metadata = project.rootProject.ext.metadata
-  userOrg metadata.userOrg
-  website metadata.website
-  repository metadata.repository
-  licences metadata.licences
+task sourcesJar(type: Jar) {
+  from sourceSets.main.java.srcDirs
+  classifier = 'sources'
 }
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+}
+
+artifacts {
+  archives javadocJar
+  archives sourcesJar
+}
+
+
+publishing {
+  publications {
+    MyPublication(MavenPublication) {
+      from components.java
+      artifact sourcesJar
+      artifact javadocJar
+      groupId GROUP_ID
+      artifactId ARTIFACT_ID_PROCESSOR
+      version VERSION
+    }
+  }
+}
+
+bintray {
+  publications 'MyPublication'
+  user bintrayUser
+  key bintrayKey
+  dryRun = dryRun
+  publish = true
+
+  pkg {
+    repo = REPO
+    userOrg = USER
+    name = ARTIFACT_ID_PROCESSOR
+    vcsUrl = VCS_URL
+    licenses = LICENSES
+    version {
+      name = VERSION
+      desc = 'An annotation processor for SimplePreferences'
+    }
+  }
+}
+
+// Non-Android project: Artifactory Plugin adds only 1 publication
+project.ext.publicationName = "maven"
+apply from: rootProject.file('gradle/gradle-artifactory-upload.gradle')

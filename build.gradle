@@ -1,7 +1,4 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-apply from: "${project.rootDir}/gradle/version/version.gradle"
-apply from: "${project.rootDir}/metadata.gradle"
-
 apply plugin: 'com.github.ben-manes.versions'
 
 final ANDROID_SDK_PATH = {
@@ -16,10 +13,11 @@ final ANDROID_SDK_PATH = {
   }
   androidSdkPath
 }()
-final ANDROID_SUPPORT_REPOSITORY = "${ANDROID_SDK_PATH}/extras/android/m2repository"
 
 
 buildscript {
+  apply from: "${rootDir.absolutePath}/ext.gradle"
+
   repositories {
     google()
     jcenter()
@@ -31,39 +29,47 @@ buildscript {
 
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
     //classpath 'com.novoda:bintray-release:0.8.1' // https://github.com/novoda/bintray-release
-    classpath "guru.stefma.bintrayrelease:bintrayrelease:1.0.0"
+//    classpath "guru.stefma.bintrayrelease:bintrayrelease:1.0.0"
+    classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+    classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.7.5"
   }
 }
+
+def generatePomFilesTask = tasks.create("generatePomFiles")
 
 allprojects {
   repositories {
     google()
     jcenter()
   }
+
+  tasks.whenTaskAdded {
+    if (it.name.matches("generatePomFileFor([A-Z][a-zA-Z]*)Publication")) {
+      generatePomFilesTask.dependsOn it
+    }
+  }
 }
 
 ext {
   deps = [// Android
-          android           : 'com.google.android:android:4.1.1.4',
-          appcompat         : 'androidx.appcompat:appcompat:1.0.0-rc01',
+          android            : 'com.google.android:android:4.1.1.4',
+          appcompat          : 'androidx.appcompat:appcompat:1.0.0-rc01',
           androidxAnnotations: 'androidx.annotation:annotation:1.0.0-rc01',
 
           // Square
-          javapoet          : 'com.squareup:javapoet:1.11.1',
+          javapoet           : 'com.squareup:javapoet:1.11.1',
 
           // Test dependencies
-          junit             : 'junit:junit:4.12',
-          truth             : 'com.google.truth:truth:0.42',
-          robolectric       : 'org.robolectric:robolectric:3.1.2',
-          compiletesting    : 'com.google.testing.compile:compile-testing:0.15',
-          autoservice       : 'com.google.auto.service:auto-service:1.0-rc4',
-          autocommon        : 'com.google.auto:auto-common:0.10',
-          commonsio         : 'commons-io:commons-io:2.6'
+          junit              : 'junit:junit:4.12',
+          truth              : 'com.google.truth:truth:0.42',
+          robolectric        : 'org.robolectric:robolectric:3.1.2',
+          compiletesting     : 'com.google.testing.compile:compile-testing:0.15',
+          autoservice        : 'com.google.auto.service:auto-service:1.0-rc4',
+          autocommon         : 'com.google.auto:auto-common:0.10',
+          commonsio          : 'commons-io:commons-io:2.6'
   ]
 
-  ANDROID_JAR = fileTree(dir: "${ANDROID_SDK_PATH}/platforms/android-25/", include: 'android.jar')
-
-  metadata.version = ext.versionName()
+  ANDROID_JAR = fileTree(dir: "${ANDROID_SDK_PATH}/platforms/android-28/", include: 'android.jar')
 }
 
 task clean(type: Delete) {
@@ -102,7 +108,7 @@ task releng {
 }
 
 wrapper {
-  gradleVersion = '4.4.1'
+  gradleVersion = '4.9'
   //noinspection UnnecessaryQualifiedReference
   distributionType = Wrapper.DistributionType.ALL
 }

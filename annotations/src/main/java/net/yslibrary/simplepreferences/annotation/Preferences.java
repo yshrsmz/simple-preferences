@@ -16,14 +16,14 @@ public @interface Preferences {
    * preferences schema name.
    * if empty, default SharedPreferences is picked.
    *
-   * @return
+   * @return schema name
    */
   String value() default "";
 
   /**
    * whether or not use DefaultSharedPreferences
    *
-   * @return
+   * @return true if use want to use DefaultSharedPreferences, otherwise return false.
    */
   boolean useDefault() default false;
 

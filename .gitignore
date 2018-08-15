@@ -38,3 +38,4 @@ proguard/
 secret.properties
 app/fabric.properties
 yslibrary.jks
+.envrc

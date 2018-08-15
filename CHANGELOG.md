@@ -1,3 +1,10 @@
+## 2.0.2 - 2018/08/15
+
+### Fix
+
+- Fix dependency resolution failure
+
+
 ## 2.0.0 - 2018/08/14
 
 ### Breaking Changes
