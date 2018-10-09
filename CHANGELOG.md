@@ -1,3 +1,9 @@
+## 2.0.3 - ?
+
+- Update to Android Gradle Plugin 3.2.0
+- Update to AndroidX 1.0.0
+
+
 ## 2.0.2 - 2018/08/15
 
 ### Fix
